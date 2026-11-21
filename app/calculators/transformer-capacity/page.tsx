@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import {sizeTransformer} from '../../../lib/transformer-sizing'
 
 export default function TransformerCapacity() {
   const [pTotal, setPTotal] = useState('500')
@@ -10,25 +11,25 @@ export default function TransformerCapacity() {
   const [pf, setPf] = useState('0.85')
   const [margin, setMargin] = useState('1.2')
   const [result, setResult] = useState<any>(null)
+  const [error, setError] = useState('')
 
   const calculate = () => {
-    const P = parseFloat(pTotal)
-    const d = parseFloat(demand)
-    const s = parseFloat(simultaneous)
-    const pfVal = parseFloat(pf)
-    const m = parseFloat(margin)
-    if (isNaN(P) || isNaN(d) || isNaN(s) || isNaN(pfVal) || isNaN(m)) return
-    const P_calc = P * d * s
-    const S_calc = P_calc / pfVal
-    const S_required = S_calc * m
-    const standards = [50,100,160,200,250,315,400,500,630,800,1000,1250,1600,2000]
-    const recommended = standards.find(s => s >= S_required) || 2000
-    setResult({
-      P_calc: P_calc.toFixed(1),
-      S_calc: S_calc.toFixed(1),
-      S_required: S_required.toFixed(1),
-      recommended
-    })
+    try {
+      const r = sizeTransformer(
+        Number(pTotal), Number(demand), Number(simultaneous),
+        Number(pf), Number(margin),
+      )
+      setResult({
+        P_calc: r.loadKw.toFixed(1),
+        S_calc: r.apparentKva.toFixed(1),
+        S_required: r.requiredKva.toFixed(1),
+        recommended: r.suggestedSingleKva,
+      })
+      setError('')
+    } catch (e) {
+      setResult(null)
+      setError(e instanceof Error ? e.message : '输入参数无效')
+    }
   }
 
   return (
@@ -45,12 +46,15 @@ export default function TransformerCapacity() {
             <div className="form-group"><label>功率因数 (0~1)</label><input type="number" step="0.01" value={pf} onChange={(e)=>setPf(e.target.value)}/></div>
             <div className="form-group"><label>余量系数</label><input type="number" step="0.01" value={margin} onChange={(e)=>setMargin(e.target.value)}/></div>
             <button onClick={calculate} style={{width:'100%',padding:'1rem',background:'var(--primary)',color:'white',border:'none',borderRadius:'8px',fontSize:'1rem',fontWeight:600,cursor:'pointer'}}>计算</button>
+            {error && <p role="alert" style={{color:'#b91c1c'}}>{error}</p>}
             {result && (
               <div className="result-group">
                 <div className="result-item"><span className="result-label">计算负荷</span><span className="result-value">{result.P_calc} kW</span></div>
                 <div className="result-item"><span className="result-label">视在功率</span><span className="result-value">{result.S_calc} kVA</span></div>
                 <div className="result-item"><span className="result-label">所需容量（含余量）</span><span className="result-value">{result.S_required} kVA</span></div>
-                <div className="result-item"><span className="result-label">推荐变压器容量</span><span className="result-value">{result.recommended} kVA</span></div>
+                {result.recommended === null
+                  ? <div className="result-item" role="alert"><span className="result-label">容量超出单台候选范围</span><span className="result-value">需分台方案或专项设计（不得直接选 2000 kVA）</span></div>
+                  : <div className="result-item"><span className="result-label">候选单台变压器容量</span><span className="result-value">{result.recommended} kVA</span></div>}
               </div>
             )}
           </div>
@@ -61,7 +65,7 @@ export default function TransformerCapacity() {
               P_calc = P_total × 需用系数 × 同时系数（kW）<br/>
               S_calc = P_calc / 功率因数（kVA）<br/>
               S_required = S_calc × 余量系数（kVA）<br/>
-              按国标系列选取不小于 S_required 的标准容量
+              仅从当前预设候选容量中挑选不小于 S_required 的容量；超限不作推荐
             </div>
           </div>
           <div className="content-section">
@@ -91,7 +95,7 @@ export default function TransformerCapacity() {
             <p>所需容量：S_required = 370.6×1.2 = 444.7 kVA</p>
             <p>按国标系列选取：推荐 500 kVA 变压器</p>
           </div>
-          <div className="disclaimer"><strong>免责声明：</strong>所有计算结果仅供参考，实际工程设计请遵循相关规范并由专业工程师审核。</div>
+          <div className="disclaimer"><strong>免责声明：</strong>容量仅为初步估算。须复核温升、谐波、负荷性质、短路水平、冗余及变电站方案，按当地规范由专业工程师审核。</div>
         </div>
       </main>
       <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>

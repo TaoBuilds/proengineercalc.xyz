@@ -2,36 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-
-function calculateDewPoint(tempC: number, humidity: number, altitude: number): number {
-  const pressure = 101.325 * Math.pow((1 - 2.25577e-5 * altitude), 5.25588)
-  const satVapor = 6.1078 * Math.pow(10, (7.5 * tempC / (tempC + 237.3)))
-  const actualVapor = satVapor * humidity / 100
-  const dewPoint = 237.3 * Math.log10(actualVapor / 6.1078) / (7.5 - Math.log10(actualVapor / 6.1078))
-  return Math.round(dewPoint * 10) / 10
-}
-
-function calculateWetBulb(tempC: number, humidity: number, pressure: number): number {
-  const tw = tempC * Math.atan(0.151977 * Math.pow(humidity + 8.313659, 0.5)) + 
-             Math.atan(tempC + humidity) - 
-             Math.atan(humidity - 1.676331) + 
-             0.00391838 * Math.pow(humidity, 1.5) * Math.atan(0.0231014 * humidity) - 
-             4.686035
-  return Math.round(tw * 10) / 10
-}
-
-function calculateEnthalpy(tempC: number, humidity: number): number {
-  const ws = 0.622 * (6.1078 * Math.pow(10, (7.5 * tempC / (tempC + 237.3))) * humidity / 100) / 101.325
-  const h = 1.005 * tempC + ws * (2501 + 1.86 * tempC)
-  return Math.round(h * 10) / 10
-}
-
-function calculateHumidityRatio(tempC: number, humidity: number, pressure: number): number {
-  const satVapor = 6.1078 * Math.pow(10, (7.5 * tempC / (tempC + 237.3)))
-  const actualVapor = satVapor * humidity / 100
-  const w = 0.622 * actualVapor / (pressure - actualVapor)
-  return Math.round(w * 10000) / 10000
-}
+import {moistAir, pressureAtAltitudeKpa} from '../../../lib/psychrometrics'
 
 export default function DewPointCalculator() {
   const [altitude, setAltitude] = useState(0)
@@ -45,14 +16,24 @@ export default function DewPointCalculator() {
     pressure: number
   } | null>(null)
 
+  const [error, setError] = useState('')
+
   useEffect(() => {
-    const pressure = 101.325 * Math.pow((1 - 2.25577e-5 * altitude), 5.25588)
-    const dewPoint = calculateDewPoint(temperature, humidity, altitude)
-    const wetBulb = calculateWetBulb(temperature, humidity, pressure)
-    const enthalpy = calculateEnthalpy(temperature, humidity)
-    const humidityRatio = calculateHumidityRatio(temperature, humidity, pressure)
-    
-    setResults({ dewPoint, wetBulb, enthalpy, humidityRatio, pressure: Math.round(pressure * 10) / 10 })
+    try {
+      const pressure = pressureAtAltitudeKpa(altitude)
+      const x = moistAir(temperature, humidity, pressure)
+      setResults({
+        dewPoint: Number(x.dewPointC.toFixed(1)),
+        wetBulb: Number(x.wetBulbC.toFixed(1)),
+        enthalpy: Number(x.enthalpyKjKg.toFixed(1)),
+        humidityRatio: Number(x.humidityRatio.toFixed(5)),
+        pressure: Number(pressure.toFixed(1)),
+      })
+      setError('')
+    } catch (e) {
+      setResults(null)
+      setError(e instanceof Error ? e.message : '参数不在支持范围内')
+    }
   }, [altitude, temperature, humidity])
 
   return (
@@ -116,6 +97,7 @@ export default function DewPointCalculator() {
               />
             </div>
 
+            {error && <p role="alert" style={{color:'#b91c1c'}}>{error}</p>}
             {results && (
               <div className="result-group">
                 <h4>📊 计算结果</h4>
@@ -124,7 +106,7 @@ export default function DewPointCalculator() {
                   <span className="result-value">{results.dewPoint} °C</span>
                 </div>
                 <div className="result-item">
-                  <span className="result-label">湿球温度</span>
+                  <span className="result-label">近似湿球温度</span>
                   <span className="result-value">{results.wetBulb} °C</span>
                 </div>
                 <div className="result-item">

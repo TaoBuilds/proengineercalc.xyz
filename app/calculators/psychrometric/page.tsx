@@ -2,48 +2,35 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import {moistAir, dryBulbFromEnthalpy} from '../../../lib/psychrometrics'
 
 export default function Psychrometric() {
   const [mode, setMode] = useState('enthalpy')
   const [temp, setTemp] = useState('')
-  const [humidity, setHumidity] = useState('')
+  const [humidity, setHumidity] = useState('50')
   const [pressure, setPressure] = useState('101.325')
   const [result, setResult] = useState<any>(null)
 
   const calculate = () => {
-    const T = parseFloat(temp)
-    const RH = parseFloat(humidity)
-    const P = parseFloat(pressure) || 101.325
-    
-    if (isNaN(T) || isNaN(RH)) return
-    
-    const Ps = 0.61078 * Math.exp((17.27 * T) / (T + 237.3))
-    const Pv = Ps * RH / 100
-    const W = 0.622 * Pv / (P - Pv)
-    const h = 1.005 * T + W * (2501 + 1.86 * T)
-    const Td = (237.3 * Math.log10(Pv / 6.1078)) / (7.5 - Math.log10(Pv / 6.1078))
-    
-    setResult({ Ps: Ps.toFixed(3), Pv: Pv.toFixed(3), W: (W*1000).toFixed(2), h: h.toFixed(1), Td: Td.toFixed(1) })
+    try {
+      const result = moistAir(Number(temp), Number(humidity), Number(pressure))
+      setResult({
+        W: (result.humidityRatio * 1000).toFixed(2),
+        h: result.enthalpyKjKg.toFixed(1),
+        Td: result.dewPointC.toFixed(1),
+      })
+    } catch (e) {
+      setResult({error: e instanceof Error ? e.message : '输入参数无效'})
+    }
   }
 
   const calculateFromEnthalpy = () => {
-    const targetH = parseFloat(temp)
-    const RH = parseFloat(humidity) || 50
-    const P = parseFloat(pressure) || 101.325
-    
-    if (isNaN(targetH)) return
-    
-    for (let T = -10; T <= 50; T += 0.1) {
-      const Ps = 0.61078 * Math.exp((17.27 * T) / (T + 237.3))
-      const Pv = Ps * RH / 100
-      const W = 0.622 * Pv / (P - Pv)
-      const h = 1.005 * T + W * (2501 + 1.86 * T)
-      if (Math.abs(h - targetH) < 0.5) {
-        setResult({ temp: T.toFixed(1), humidity: RH, enthalpy: h.toFixed(1), found: true })
-        return
-      }
+    try {
+      const temperature = dryBulbFromEnthalpy(Number(temp), Number(humidity), Number(pressure))
+      setResult({temp: temperature.toFixed(1)})
+    } catch (e) {
+      setResult({error: e instanceof Error ? e.message : '无法反算温度'})
     }
-    setResult({ error: 'Cannot find matching temperature' })
   }
 
   return (
@@ -60,10 +47,11 @@ export default function Psychrometric() {
                 <option value="reverse">根据焓值反算温度</option>
               </select>
             </div>
-            <div className="form-group"><label>干球温度 (°C)</label><input type="number" value={temp} onChange={(e)=>setTemp(e.target.value)}/></div>
+            <div className="form-group"><label>{mode === 'reverse' ? '目标焓值 (kJ/kg干空气)' : '干球温度 (°C)'}</label><input type="number" value={temp} onChange={(e)=>setTemp(e.target.value)}/></div>
             <div className="form-group"><label>相对湿度 (%)</label><input type="number" value={humidity} onChange={(e)=>setHumidity(e.target.value)}/></div>
             <div className="form-group"><label>大气压力 (kPa)</label><input type="number" value={pressure} onChange={(e)=>setPressure(e.target.value)}/></div>
             <button onClick={mode==='enthalpy'?calculate:calculateFromEnthalpy} style={{width:'100%',padding:'1rem',background:'var(--primary)',color:'white',border:'none',borderRadius:'8px'}}>计算</button>
+            {result?.error && <p role="alert" style={{color:'#b91c1c'}}>{result.error}</p>}
             {result && !result.error && (
               <div className="result-group">
                 {result.h && <div className="result-item"><span className="result-label">焓值</span><span className="result-value">{result.h} kJ/kg</span></div>}
@@ -95,9 +83,9 @@ export default function Psychrometric() {
           <div className="content-section">
             <h2>常见问题</h2>
             <div className="faq-item"><p className="faq-question">什么是焓值？</p><p className="faq-answer">焓值是空气的总热量，单位 kJ/kg，由显热和潜热组成。</p></div>
-            <div className="faq-item"><p className="faq-question">为什么压力会影响计算？</p><p className="faq-answer">海拔越高，气压越低，空气的持湿能力越弱，所有湿空气参数都会受影响。</p></div>
+            <div className="faq-item"><p className="faq-question">为什么压力会影响计算？</p><p className="faq-answer">相同温度和相对湿度下，压力越低，含湿量通常越大；压力变化会影响焓值和湿球温度。</p></div>
           </div>
-          <div className="disclaimer"><strong>免责声明：</strong>所有计算结果仅供参照。</div>
+          <div className="disclaimer"><strong>免责声明：</strong>近似公式仅供初步估算，低于 0°C 或重要工艺设计请使用经验证的湿空气物性数据和仪表。</div>
         </div>
       </main>
       <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
