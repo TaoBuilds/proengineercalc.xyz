@@ -11,23 +11,37 @@ export default function Power() {
   const [pf, setPf] = useState('0.85')
   const [phase, setPhase] = useState('single')
   const [result, setResult] = useState<any>(null)
+  const [error, setError] = useState('')
 
   const calculate = () => {
     const I = parseFloat(current)
     const V = parseFloat(voltage)
     const P = parseFloat(power)
-    const PF = parseFloat(pf) || 0.85
-    
-    if (mode === 'power' && I && V) {
-      const realP = phase === 'single' ? I * V * PF : Math.sqrt(3) * I * V * PF
-      const apparent = phase === 'single' ? I * V : Math.sqrt(3) * I * V
-      setResult({ power: realP.toFixed(0), apparent: apparent.toFixed(0), reactive: Math.sqrt(Math.pow(apparent,2)-Math.pow(realP,2)).toFixed(0) })
-    } else if (mode === 'current' && V && P) {
-      const Icalc = phase === 'single' ? P / (V * PF) : P / (Math.sqrt(3) * V * PF)
-      setResult({ current: Icalc.toFixed(2) })
-    } else if (mode === 'voltage' && I && P) {
-      const Vcalc = phase === 'single' ? P / (I * PF) : P / (Math.sqrt(3) * I * PF)
-      setResult({ voltage: Vcalc.toFixed(1) })
+    const PF = parseFloat(pf)
+    const factor = phase === 'single' ? 1 : Math.sqrt(3)
+    if (!Number.isFinite(PF) || PF <= 0 || PF > 1) {
+      setError('功率因数必须大于 0 且不超过 1')
+      setResult(null)
+      return
+    }
+    const needs = mode === 'power' ? [I, V] : mode === 'current' ? [P, V] : [P, I]
+    if (needs.some(x => !Number.isFinite(x) || x <= 0)) {
+      setError('请输入有效且大于 0 的电流、电压或有功功率')
+      setResult(null)
+      return
+    }
+    setError('')
+    if (mode === 'power') {
+      const realP = factor * I * V * PF
+      const apparent = factor * I * V
+      setResult({
+        power: realP.toFixed(0), apparent: apparent.toFixed(0),
+        reactive: Math.sqrt(Math.max(0, apparent ** 2 - realP ** 2)).toFixed(0),
+      })
+    } else if (mode === 'current') {
+      setResult({current: (P / (factor * V * PF)).toFixed(2)})
+    } else {
+      setResult({voltage: (P / (factor * I * PF)).toFixed(1)})
     }
   }
 
@@ -57,6 +71,7 @@ export default function Power() {
             <div className="form-group"><label>电压 (V) {mode==='voltage'?'':'*'}</label><input type="number" value={voltage} onChange={(e)=>setVoltage(e.target.value)}/></div>
             <div className="form-group"><label>功率 (W) {mode==='power'?'':'*'}</label><input type="number" value={power} onChange={(e)=>setPower(e.target.value)}/></div>
             <button onClick={calculate} style={{width:'100%',padding:'1rem',background:'var(--primary)',color:'white',border:'none',borderRadius:'8px'}}>计算</button>
+            {error && <p role="alert" style={{color:'#b91c1c'}}>{error}</p>}
             {result && (
               <div className="result-group">
                 {result.power && <div className="result-item"><span className="result-label">有功功率</span><span className="result-value">{result.power} W</span></div>}
@@ -73,7 +88,7 @@ export default function Power() {
             <div className="formula-box">
               单相: P = V × I × PF<br/>
               三相: P = √3 × V_L × I_L × PF<br/><br/>
-              S = V × I（视在功率）<br/>
+              单相 S = V × I；三相 S = √3 × V_L × I_L（视在功率）<br/>
               Q = √(S² - P²)（无功功率）
             </div>
           </div>
@@ -97,7 +112,7 @@ export default function Power() {
             <p><strong>案例1：</strong>10HP电机，480V三相：I = 7460/(480×0.89×√3) = 10.1A</p>
             <p><strong>案例2：</strong>2000W负载，230V单相：I = 2000/(230×0.9) = 9.7A</p>
           </div>
-          <div className="disclaimer"><strong>免责声明：</strong>所有计算结果仅供参照。</div>
+          <div className="disclaimer"><strong>免责声明：</strong>计算基于平衡正弦交流稳态；三相电压应输入线电压。设备选型需考虑谐波、启动及实际负载。</div>
         </div>
       </main>
       <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>

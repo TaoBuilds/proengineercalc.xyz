@@ -13,7 +13,7 @@ export default function Psychrometric() {
 
   const calculate = () => {
     try {
-      const result = moistAir(Number(temp), Number(humidity), Number(pressure))
+      const result = moistAir(parseFloat(temp), parseFloat(humidity), parseFloat(pressure))
       setResult({
         W: (result.humidityRatio * 1000).toFixed(2),
         h: result.enthalpyKjKg.toFixed(1),
@@ -26,7 +26,7 @@ export default function Psychrometric() {
 
   const calculateFromEnthalpy = () => {
     try {
-      const temperature = dryBulbFromEnthalpy(Number(temp), Number(humidity), Number(pressure))
+      const temperature = dryBulbFromEnthalpy(parseFloat(temp), parseFloat(humidity), parseFloat(pressure))
       setResult({temp: temperature.toFixed(1)})
     } catch (e) {
       setResult({error: e instanceof Error ? e.message : '无法反算温度'})

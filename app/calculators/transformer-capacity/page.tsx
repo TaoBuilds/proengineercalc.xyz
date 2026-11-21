@@ -16,8 +16,8 @@ export default function TransformerCapacity() {
   const calculate = () => {
     try {
       const r = sizeTransformer(
-        Number(pTotal), Number(demand), Number(simultaneous),
-        Number(pf), Number(margin),
+        parseFloat(pTotal), parseFloat(demand), parseFloat(simultaneous),
+        parseFloat(pf), parseFloat(margin),
       )
       setResult({
         P_calc: r.loadKw.toFixed(1),
