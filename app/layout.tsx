@@ -4,12 +4,12 @@ import {SiteFooter, SiteHeader} from '../components/SiteFrame'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.proengineercalc.xyz'),
-  title: '智效厂务工程计算器 - 专业工程师计算工具箱',
+  title: '智效动力计算器 - 专业工程师计算工具箱',
   description: '免费在线工程师计算工具箱，包含暖通空调、电气工程、流体力学和结构工程计算器。支持露点计算、电缆载流量、湿空气参数等多种工程计算。',
-  keywords: '智效厂务工程计算器, 智效厂务, 暖通空调计算器, 电气计算器, 露点计算器, 电缆载流量, 湿空气计算器, 工程计算工具',
-  authors: [{ name: '智效厂务工程计算器' }],
+  keywords: '智效动力计算器, 智效厂务, 暖通空调计算器, 电气计算器, 露点计算器, 电缆载流量, 湿空气计算器, 工程计算工具',
+  authors: [{ name: '智效动力计算器' }],
   openGraph: {
-    title: '智效厂务工程计算器 - 专业工程师计算工具箱',
+    title: '智效动力计算器 - 专业工程师计算工具箱',
     description: '暖通、电气、流体与结构工程的在线初步估算工具。',
     type: 'website',
   },
@@ -25,7 +25,7 @@ export default function RootLayout({
       <head>
         <meta name="google-site-verification" content="7p6E6l3bA-XCHPdkW7jBefcSPlzYNp3TxjMck2AuawE" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#17162b" />
+        <meta name="theme-color" content="#173951" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <link rel="apple-touch-icon" href="/icon.svg" />

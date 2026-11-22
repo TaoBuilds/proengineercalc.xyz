@@ -1,11 +1,11 @@
 import type {Metadata} from 'next'
-import CalculatorCategoryPage from '../../../components/CalculatorCategoryPage'
+import MiniCategoryPage from '../../../components/MiniCategoryPage'
 
 export const metadata: Metadata = {
-  title: '流体力学计算器 | ProEngineerCalc',
+  title: '流体与管道 | 智效动力计算器',
   alternates: {canonical: '/calculators/fluid'},
 }
 
 export default function Page() {
-  return <CalculatorCategoryPage id="fluid" />
+  return <MiniCategoryPage id="fluid" />
 }

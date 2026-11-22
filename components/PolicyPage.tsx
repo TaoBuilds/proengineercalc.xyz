@@ -6,7 +6,7 @@ export default function PolicyPage({title, children}: {title: string; children: 
     <main id="main-content" className="container policy-page">
       <header className="tool-heading">
         <div>
-          <Link className="tool-section-link" href="/">ProEngineerCalc</Link>
+          <Link className="tool-section-link" href="/">智效动力计算器</Link>
           <h1>{title}</h1>
         </div>
       </header>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CalculatorWorkbench from '../../../components/CalculatorWorkbench'
 
 const unitLabels: Record<string, Record<string, string>> = {
@@ -42,6 +42,14 @@ export default function UnitConverter() {
   const [category, setCategory] = useState('length')
   const [from, setFrom] = useState('m')
   const [result, setResult] = useState<Record<string, string> | null>(null)
+
+  useEffect(() => {
+    const preset = new URLSearchParams(window.location.search).get('category')
+    if (preset && Object.hasOwn(unitLabels, preset)) {
+      setCategory(preset)
+      setFrom(Object.keys(unitLabels[preset])[0])
+    }
+  }, [])
 
   const handleCategoryChange = (cat: string) => {
     setCategory(cat)

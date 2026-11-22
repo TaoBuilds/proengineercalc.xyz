@@ -140,4 +140,8 @@
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
+  <url><loc>https://proengineercalc.xyz/wechat</loc></url>
+  <url><loc>https://proengineercalc.xyz/calculators/quick-reference</loc></url>
+  <url><loc>https://proengineercalc.xyz/calculators/units</loc></url>
+  <url><loc>https://proengineercalc.xyz/calculators/energy</loc></url>
 </urlset>
