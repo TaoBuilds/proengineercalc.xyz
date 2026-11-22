@@ -9,6 +9,7 @@ export default function CableAmpacity() {
   const [installMethod, setInstallMethod] = useState('B1')
   const [temp, setTemp] = useState(30)
   const [result, setResult] = useState<number | null>(null)
+  const [error, setError] = useState('')
 
   const calculate = () => {
     const copperBase: Record<number, number> = {
@@ -21,10 +22,15 @@ export default function CableAmpacity() {
       'A1': 0.77, 'A2': 0.80, 'B1': 1.0, 'B2': 0.95, 'C': 1.15, 'D': 1.08
     }
     const baseTable = conductorType === 'copper' ? copperBase : aluminumBase
-    const sizes = Object.keys(baseTable).map(Number)
-    const nearest = sizes.reduce((a, b) => Math.abs(b - size) < Math.abs(a - size) ? b : a)
-    const baseAmp = baseTable[nearest]
-    const tempFactor = temp <= 30 ? 1.0 : Math.sqrt((70 - temp) / (70 - 30))
+    if (!Number.isFinite(size) || !Number.isFinite(temp) || temp < -20 || temp >= 70 || !(size in baseTable)) {
+      setError('请使用表中支持的导体截面积；环境温度须在 -20～70°C 以下')
+      setResult(null)
+      return
+    }
+    setError('')
+    const baseAmp = baseTable[size]
+    // Simplified 70°C-conductor approximation. Not a normative installation rating.
+    const tempFactor = temp <= 30 ? 1.0 : Math.sqrt((70 - temp) / 40)
     const ampacity = baseAmp * (methodFactors[installMethod] || 1) * tempFactor
     setResult(Math.round(ampacity * 10) / 10)
   }
@@ -85,7 +91,8 @@ export default function CableAmpacity() {
 
             <button onClick={calculate} style={{ width: '100%', padding: '1rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '1rem', fontWeight: 600, cursor: 'pointer' }}>计算</button>
 
-            {result && (
+            {error && <p role="alert" style={{color:'#b91c1c'}}>{error}</p>}
+            {result !== null && (
               <div className="result-group">
                 <h4>计算结果</h4>
                 <div className="result-item">

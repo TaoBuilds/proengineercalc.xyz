@@ -1,0 +1,33 @@
+name: Engineering calculation checks
+
+on:
+  pull_request:
+    paths:
+      - 'app/calculators/**'
+      - 'lib/**'
+      - 'tests/**'
+      - 'package*.json'
+      - '.github/workflows/engineering-checks.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'app/calculators/**'
+      - 'lib/**'
+      - 'tests/**'
+      - 'package*.json'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run test:engineering
+      - run: npx tsc --noEmit
+      - run: npm run build
