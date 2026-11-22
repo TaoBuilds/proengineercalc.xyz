@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
+import CalculatorWorkbench from '../../../components/CalculatorWorkbench'
 
 const E_OPTIONS = [
   { label: '钢 200 GPa',    value: '200' },
@@ -44,82 +44,75 @@ export default function BeamLoad() {
   }
 
   return (
-    <>
-      <main id="main-content" className="container">
-        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/structure">结构工程</Link></div>
-        <div className="calculator-container">
-          <h1 className="page-title">梁荷载计算器</h1>
-          <div className="calculator-form">
-            <div className="form-group"><label htmlFor="beam-load-field-1">均布荷载 (kN/m)</label><input id="beam-load-field-1" type="number" min="0" step="any" value={load} onChange={(e) => setLoad(e.target.value)} /></div>
-            <div className="form-group"><label htmlFor="beam-load-field-2">跨度 (m)</label><input id="beam-load-field-2" type="number" min="0" step="any" value={length} onChange={(e) => setLength(e.target.value)} /></div>
-            <div className="form-group"><label htmlFor="beam-load-field-3">梁宽 b (mm)</label><input id="beam-load-field-3" type="number" min="0" step="any" value={width} onChange={(e) => setWidth(e.target.value)} /></div>
-            <div className="form-group"><label htmlFor="beam-load-field-4">梁高 h (mm)</label><input id="beam-load-field-4" type="number" min="0" step="any" value={height} onChange={(e) => setHeight(e.target.value)} /></div>
-            <div className="form-group">
+    <CalculatorWorkbench
+      slug="beam-load"
+      inputs={
+        <>
+          <div className="form-group"><label htmlFor="beam-load-field-1">均布荷载 (kN/m)</label><input id="beam-load-field-1" type="number" min="0" step="any" value={load} onChange={(e) => setLoad(e.target.value)} /></div>
+          <div className="form-group"><label htmlFor="beam-load-field-2">跨度 (m)</label><input id="beam-load-field-2" type="number" min="0" step="any" value={length} onChange={(e) => setLength(e.target.value)} /></div>
+          <div className="form-group"><label htmlFor="beam-load-field-3">梁宽 b (mm)</label><input id="beam-load-field-3" type="number" min="0" step="any" value={width} onChange={(e) => setWidth(e.target.value)} /></div>
+          <div className="form-group"><label htmlFor="beam-load-field-4">梁高 h (mm)</label><input id="beam-load-field-4" type="number" min="0" step="any" value={height} onChange={(e) => setHeight(e.target.value)} /></div>
+          <div className="form-group">
               <label htmlFor="beam-load-field-5">弹性模量</label>
               <select id="beam-load-field-5" value={eVal} onChange={(e) => setEVal(e.target.value)}>
                 {E_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
             </div>
-            {error && <p style={{ color: 'red', margin: '0.5rem 0' }}>{error}</p>}
-            <button onClick={calculate} style={{ width: '100%', padding: '1rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px' }}>计算</button>
-            {result && (
-              <div className="result-group" role="status">
-                <div className="result-item"><span className="result-label">截面惯性矩 I</span><span className="result-value">{result.I.toExponential(3)} mm⁴</span></div>
-                <div className="result-item"><span className="result-label">最大弯矩 M</span><span className="result-value">{result.M_max.toFixed(2)} kN·m</span></div>
-                <div className="result-item"><span className="result-label">最大弯曲应力 σ</span><span className="result-value">{result.sigma.toFixed(2)} MPa</span></div>
-                <div className="result-item"><span className="result-label">最大挠度 δ</span><span className="result-value">{result.delta.toFixed(2)} mm</span></div>
-                <div className="result-item"><span className="result-label">允许挠度 L/300</span><span className="result-value">{result.delta_allow.toFixed(2)} mm</span></div>
-                <div className="result-item">
-                  <span className="result-label">挠度验算</span>
-                  <span className="result-value" style={{ color: result.passes ? 'green' : 'red' }}>
-                    {result.passes ? '通过 ✓' : '不通过 ✗'}
-                  </span>
-                </div>
-              </div>
-            )}
+          {error && <p role="alert" style={{ color: 'red', margin: '0.5rem 0' }}>{error}</p>}
+        </>
+      }
+      result={result && (
+        <div className="result-group">
+          <div className="result-item"><span className="result-label">截面惯性矩 I</span><span className="result-value">{result.I.toExponential(3)} mm⁴</span></div>
+          <div className="result-item"><span className="result-label">最大弯矩 M</span><span className="result-value">{result.M_max.toFixed(2)} kN·m</span></div>
+          <div className="result-item"><span className="result-label">最大弯曲应力 σ</span><span className="result-value">{result.sigma.toFixed(2)} MPa</span></div>
+          <div className="result-item"><span className="result-label">最大挠度 δ</span><span className="result-value">{result.delta.toFixed(2)} mm</span></div>
+          <div className="result-item"><span className="result-label">允许挠度 L/300</span><span className="result-value">{result.delta_allow.toFixed(2)} mm</span></div>
+          <div className="result-item">
+            <span className="result-label">挠度验算</span>
+            <span className="result-value" style={{ color: result.passes ? 'green' : 'red' }}>
+              {result.passes ? '通过 ✓' : '不通过 ✗'}
+            </span>
           </div>
-
-          <div className="content-section">
-            <h2>计算公式</h2>
-            <div className="formula-box">
-              <p>截面惯性矩：I = b·h³ / 12 (mm⁴)</p>
-              <p>最大弯矩：M = w·L² / 8 (kN·m)</p>
-              <p>最大挠度：δ = 5·w·L⁴ / (384·E·I) (mm)</p>
-              <p>最大弯曲应力：σ = M·(h/2) / I (MPa)</p>
-              <p>允许挠度：[δ] = L/300</p>
-            </div>
-          </div>
-
-          <div className="content-section">
-            <h2>使用说明</h2>
-            <ul>
-              <li>本计算器适用于两端简支梁承受均布荷载的情况</li>
-              <li>梁宽和梁高均为截面尺寸，单位为 mm</li>
-              <li>钢梁弹性模量取 200 GPa，混凝土梁取 30 GPa（C30）</li>
-              <li>挠度限值 L/300 适用于一般楼盖梁，屋面梁可取 L/200</li>
-              <li>应力结果仅为弯曲正应力，剪切应力需另行验算</li>
-            </ul>
-          </div>
-
-          <div className="content-section">
-            <h2>常见问题</h2>
-            <p><strong>Q：挠度不通过怎么办？</strong><br />可增大梁高（对挠度影响最大，I ∝ h³）、增大弹性模量（换用钢梁）或减小跨度（加设中间支撑）。</p>
-            <p><strong>Q：均布荷载如何确定？</strong><br />楼面活荷载一般取 2～4 kN/m²，乘以梁的受荷宽度即得线荷载（kN/m），再加上梁自重。</p>
-            <p><strong>Q：弯曲应力超限怎么处理？</strong><br />增大截面高度或改用高强度材料（如 Q355 钢代替 Q235）。</p>
-          </div>
-
-          <div className="content-section">
-            <h2>计算案例</h2>
-            <p><strong>案例：</strong>简支钢梁，跨度 6 m，均布荷载 15 kN/m，截面 200×400 mm，E=200 GPa。</p>
-            <p>I = 200×400³/12 = 1.067×10⁹ mm⁴</p>
-            <p>M = 15×6²/8 = 67.5 kN·m</p>
-            <p>δ = 5×15×6000⁴/(384×200000×1.067×10⁹) ≈ 7.6 mm</p>
-            <p>允许挠度 = 6000/300 = 20 mm，挠度验算通过。</p>
-          </div>
-
-          <div className="disclaimer"><strong>免责声明：</strong>本计算器仅供工程参考，实际设计须由专业结构工程师复核。</div>
         </div>
-      </main>
-    </>
+      )}
+      onCalculate={calculate}
+    >
+      <div className="content-section">
+        <h2>计算公式</h2>
+        <div className="formula-box">
+          <p>截面惯性矩：I = b·h³ / 12 (mm⁴)</p>
+          <p>最大弯矩：M = w·L² / 8 (kN·m)</p>
+          <p>最大挠度：δ = 5·w·L⁴ / (384·E·I) (mm)</p>
+          <p>最大弯曲应力：σ = M·(h/2) / I (MPa)</p>
+          <p>允许挠度：[δ] = L/300</p>
+        </div>
+      </div>
+      <div className="content-section">
+        <h2>使用说明</h2>
+        <ul>
+          <li>本计算器适用于两端简支梁承受均布荷载的情况</li>
+          <li>梁宽和梁高均为截面尺寸，单位为 mm</li>
+          <li>钢梁弹性模量取 200 GPa，混凝土梁取 30 GPa（C30）</li>
+          <li>挠度限值 L/300 适用于一般楼盖梁，屋面梁可取 L/200</li>
+          <li>应力结果仅为弯曲正应力，剪切应力需另行验算</li>
+        </ul>
+      </div>
+      <div className="content-section">
+        <h2>常见问题</h2>
+        <p><strong>Q：挠度不通过怎么办？</strong><br />可增大梁高（对挠度影响最大，I ∝ h³）、增大弹性模量（换用钢梁）或减小跨度（加设中间支撑）。</p>
+        <p><strong>Q：均布荷载如何确定？</strong><br />楼面活荷载一般取 2～4 kN/m²，乘以梁的受荷宽度即得线荷载（kN/m），再加上梁自重。</p>
+        <p><strong>Q：弯曲应力超限怎么处理？</strong><br />增大截面高度或改用高强度材料（如 Q355 钢代替 Q235）。</p>
+      </div>
+      <div className="content-section">
+        <h2>计算案例</h2>
+        <p><strong>案例：</strong>简支钢梁，跨度 6 m，均布荷载 15 kN/m，截面 200×400 mm，E=200 GPa。</p>
+        <p>I = 200×400³/12 = 1.067×10⁹ mm⁴</p>
+        <p>M = 15×6²/8 = 67.5 kN·m</p>
+        <p>δ = 5×15×6000⁴/(384×200000×1.067×10⁹) ≈ 7.6 mm</p>
+        <p>允许挠度 = 6000/300 = 20 mm，挠度验算通过。</p>
+      </div>
+      <div className="disclaimer"><strong>免责声明：</strong>本计算器仅供工程参考，实际设计须由专业结构工程师复核。</div>
+    </CalculatorWorkbench>
   )
 }

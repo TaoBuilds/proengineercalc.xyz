@@ -10,9 +10,19 @@ export default function CalculatorCategoryPage({id}: {id: CalculatorCategory}) {
 
   return (
     <main id="main-content" className="container category-page">
-      <Link className="tool-back" href="/#calculator-directory">全部计算器</Link>
-      <h1>{category.label}</h1>
-      <p className="category-description">{category.description}</p>
+      <header className="tool-heading">
+        <div>
+          <Link className="tool-section-link" href="/#calculator-directory">全部计算器</Link>
+          <h1>{category.label}</h1>
+          <p className="category-description">{category.description}</p>
+        </div>
+        <p className="category-total">{tools.length} 个工具</p>
+      </header>
+      <nav className="directory-filters" aria-label="工程类别">
+        {categories.map(item => (
+          <Link key={item.id} href={`/calculators/${item.id}`} aria-current={item.id === id ? 'page' : undefined}>{item.label}</Link>
+        ))}
+      </nav>
       <div className="calculator-grid">
         {tools.map(tool => <ToolCard key={tool.slug} tool={tool} headingLevel={2} />)}
       </div>

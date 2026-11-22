@@ -146,3 +146,53 @@ main.container { padding-block: clamp(1.45rem, 3.5vw, 3.75rem); }
 @media (prefers-reduced-motion: reduce) {
   .calculator-card { transition: none; }
 }
+
+/* Workspaces, discipline indexes, and site documents. */
+.calculator-workbench .calculator-breadcrumb { max-width: none; margin: 0 0 .7rem; }
+.tool-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.1rem; padding: clamp(1.1rem, 3.2vw, 2.2rem); border: 1px solid #dcd4fb; border-radius: 1rem; background: radial-gradient(ellipse at top right, #e8e1ff, #f9f7ff 72%); }
+.tool-heading h1 { margin: .45rem 0 .35rem; font-size: clamp(1.9rem, 4vw, 3.45rem); font-weight: 780; line-height: 1.18; letter-spacing: -.05em; }
+.tool-heading p { max-width: 43ch; color: var(--text-light); }
+.tool-section-link { font-size: .94rem; font-weight: 700; white-space: nowrap; }
+.tool-workspace { display: grid; grid-template-columns: minmax(0, 1.22fr) minmax(0, 1fr); gap: 1rem; align-items: stretch; }
+.tool-panel, .policy-document { min-width: 0; padding: clamp(1.05rem, 2.6vw, 1.75rem); border: 1px solid var(--border); border-radius: .9rem; background: var(--card-bg); }
+.tool-panel-output { border-color: #d8d0f4; background: #fdfcff; }
+.tool-panel-heading { margin-bottom: .95rem; padding-bottom: .65rem; border-bottom: 1px solid var(--border); }
+.tool-panel h2 { font-size: 1.16rem; line-height: 1.35; }
+.tool-panel .calculator-form { padding: 0; margin: 0; border: 0; box-shadow: none; }
+.tool-panel .calculator-form > :not(.form-group) { grid-column: 1 / -1; }
+.tool-panel .calculator-form label { color: var(--text); }
+.tool-submit { display: inline-flex; min-height: 2.8rem; align-items: center; justify-content: center; padding: .65rem 1.2rem; border: 1px solid var(--primary); border-radius: .54rem; background: var(--primary); color: white; font-weight: 720; text-decoration: none; }
+.tool-submit:hover { background: var(--primary-dark); }
+.tool-output { min-height: 4.8rem; }
+.tool-output-empty { color: var(--text-light); padding: .75rem 0; }
+.tool-output .result-group { margin: 0; padding: .45rem 1rem; }
+.tool-reference { margin-top: clamp(1.65rem, 4vw, 3rem); scroll-margin-top: 1rem; }
+.tool-reference > h2 { margin-bottom: .8rem; font-size: clamp(1.35rem, 2.5vw, 1.8rem); }
+.tool-reference-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(13rem, .32fr); gap: 1rem; align-items: start; }
+.tool-reference-copy { min-width: 0; }
+.tool-reference .content-section { overflow-x: auto; }
+.tool-related { padding: 1rem 1.15rem; border: 1px solid var(--border); border-radius: .85rem; background: var(--card-bg); }
+.tool-related h3 { font-size: 1.06rem; }
+.tool-related ul { margin: .5rem 0 0; padding: 0; list-style: none; }
+.tool-related li + li { border-top: 1px solid var(--border); }
+.tool-related a { display: block; padding: .48rem 0; font-size: .95rem; }
+.policy-page { max-width: 59rem; }
+.policy-document { line-height: 1.8; }
+.policy-document h2 { margin: 1.2rem 0 .32rem; color: var(--text); font-size: 1.18rem; }
+.policy-document p, .policy-document li { color: var(--text-light); }
+.policy-document .disclaimer { color: #5c4417; }
+.not-found-page .tool-submit { margin-top: 1rem; }
+.category-page .tool-heading { margin-bottom: 1.25rem; }
+.category-page .category-description { margin: 0; }
+.category-page .category-total { color: var(--primary-dark); font-variant-numeric: tabular-nums; font-weight: 680; white-space: nowrap; }
+.category-page .directory-filters { margin-top: 0; }
+.category-page .directory-filters a { display: inline-flex; min-height: 2.6rem; align-items: center; padding: .45rem .75rem; border: 1px solid var(--border); border-radius: .55rem; background: var(--card-bg); color: var(--primary-dark); text-decoration: none; font-weight: 650; }
+.category-page .directory-filters a[aria-current="page"] { border-color: var(--primary); color: white; background: var(--primary); }
+
+@media (max-width: 49rem) {
+  .tool-workspace, .tool-reference-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 35rem) {
+  .tool-heading { flex-direction: column; align-items: flex-start; }
+  .tool-output .result-group { padding-inline: .78rem; }
+}
