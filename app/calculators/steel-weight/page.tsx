@@ -57,39 +57,38 @@ export default function SteelWeight() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1><p className="tagline">专业工程师计算工具箱</p></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/hvac">🌡️ 暖通空调</Link><Link href="/calculators/electrical">⚡ 电气工程</Link><Link href="/calculators/fluid">💧 流体力学</Link><Link href="/calculators/structure">🏗️ 结构工程</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/structure">结构工程</Link></div>
         <div className="calculator-container">
-          <h1 style={{fontSize:'1.75rem',fontWeight:700,margin:'2rem 0 1rem'}}>钢材重量计算器</h1>
+          <h1 className="page-title">钢材重量计算器</h1>
           <div className="calculator-form">
-            <div className="form-group"><label>钢材类型</label>
-              <select value={steelType} onChange={(e)=>{ setSteelType(e.target.value); setResult(null) }}>
+            <div className="form-group"><label htmlFor="steel-weight-field-1">钢材类型</label>
+              <select id="steel-weight-field-1" value={steelType} onChange={(e)=>{ setSteelType(e.target.value); setResult(null) }}>
                 {Object.entries(typeLabels).map(([k,v])=><option key={k} value={k}>{v}</option>)}
               </select>
             </div>
             {steelType === 'round' && (
-              <div className="form-group"><label>直径 (mm)</label><input type="number" value={dim1} onChange={(e)=>setDim1(e.target.value)} placeholder="例如：20"/></div>
+              <div className="form-group"><label htmlFor="steel-weight-field-2">直径 (mm)</label><input id="steel-weight-field-2" type="number" value={dim1} onChange={(e)=>setDim1(e.target.value)} placeholder="例如：20"/></div>
             )}
             {steelType === 'square' && (
-              <div className="form-group"><label>边长 (mm)</label><input type="number" value={dim1} onChange={(e)=>setDim1(e.target.value)} placeholder="例如：50"/></div>
+              <div className="form-group"><label htmlFor="steel-weight-field-3">边长 (mm)</label><input id="steel-weight-field-3" type="number" value={dim1} onChange={(e)=>setDim1(e.target.value)} placeholder="例如：50"/></div>
             )}
             {steelType === 'flat' && (<>
-              <div className="form-group"><label>宽度 (mm)</label><input type="number" value={dim1} onChange={(e)=>setDim1(e.target.value)} placeholder="例如：100"/></div>
-              <div className="form-group"><label>厚度 (mm)</label><input type="number" value={dim2} onChange={(e)=>setDim2(e.target.value)} placeholder="例如：10"/></div>
+              <div className="form-group"><label htmlFor="steel-weight-field-4">宽度 (mm)</label><input id="steel-weight-field-4" type="number" value={dim1} onChange={(e)=>setDim1(e.target.value)} placeholder="例如：100"/></div>
+              <div className="form-group"><label htmlFor="steel-weight-field-5">厚度 (mm)</label><input id="steel-weight-field-5" type="number" value={dim2} onChange={(e)=>setDim2(e.target.value)} placeholder="例如：10"/></div>
             </>)}
             {steelType === 'angle' && (<>
-              <div className="form-group"><label>肢宽 b (mm)</label><input type="number" value={dim1} onChange={(e)=>setDim1(e.target.value)} placeholder="例如：75"/></div>
-              <div className="form-group"><label>肢厚 t (mm)</label><input type="number" value={dim2} onChange={(e)=>setDim2(e.target.value)} placeholder="例如：8"/></div>
+              <div className="form-group"><label htmlFor="steel-weight-field-6">肢宽 b (mm)</label><input id="steel-weight-field-6" type="number" value={dim1} onChange={(e)=>setDim1(e.target.value)} placeholder="例如：75"/></div>
+              <div className="form-group"><label htmlFor="steel-weight-field-7">肢厚 t (mm)</label><input id="steel-weight-field-7" type="number" value={dim2} onChange={(e)=>setDim2(e.target.value)} placeholder="例如：8"/></div>
             </>)}
             {steelType === 'pipe' && (<>
-              <div className="form-group"><label>外径 D (mm)</label><input type="number" value={dim1} onChange={(e)=>setDim1(e.target.value)} placeholder="例如：114"/></div>
-              <div className="form-group"><label>壁厚 t (mm)</label><input type="number" value={dim3} onChange={(e)=>setDim3(e.target.value)} placeholder="例如：6"/></div>
+              <div className="form-group"><label htmlFor="steel-weight-field-8">外径 D (mm)</label><input id="steel-weight-field-8" type="number" value={dim1} onChange={(e)=>setDim1(e.target.value)} placeholder="例如：114"/></div>
+              <div className="form-group"><label htmlFor="steel-weight-field-9">壁厚 t (mm)</label><input id="steel-weight-field-9" type="number" value={dim3} onChange={(e)=>setDim3(e.target.value)} placeholder="例如：6"/></div>
             </>)}
-            <div className="form-group"><label>长度 (m)</label><input type="number" value={length} onChange={(e)=>setLength(e.target.value)} placeholder="例如：6"/></div>
+            <div className="form-group"><label htmlFor="steel-weight-field-10">长度 (m)</label><input id="steel-weight-field-10" type="number" value={length} onChange={(e)=>setLength(e.target.value)} placeholder="例如：6"/></div>
             <button onClick={calculate} style={{width:'100%',padding:'1rem',background:'var(--primary)',color:'white',border:'none',borderRadius:'8px',fontSize:'1rem',fontWeight:600,cursor:'pointer'}}>计算</button>
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 <div className="result-item"><span className="result-label">截面积</span><span className="result-value">{result.area} mm²</span></div>
                 <div className="result-item"><span className="result-label">每米重量</span><span className="result-value">{result.weightPerMeter} kg/m</span></div>
                 <div className="result-item"><span className="result-label">总重量</span><span className="result-value">{result.weight} kg</span></div>
@@ -136,7 +135,6 @@ export default function SteelWeight() {
           <div className="disclaimer"><strong>免责声明：</strong>所有计算结果仅供参考，实际工程设计请遵循相关规范并由专业工程师审核。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

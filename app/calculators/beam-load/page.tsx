@@ -45,26 +45,25 @@ export default function BeamLoad() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/structure">🏗️ 结构工程</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/structure">结构工程</Link></div>
         <div className="calculator-container">
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '2rem 0 1rem' }}>梁荷载计算器</h1>
+          <h1 className="page-title">梁荷载计算器</h1>
           <div className="calculator-form">
-            <div className="form-group"><label>均布荷载 (kN/m)</label><input type="number" min="0" step="any" value={load} onChange={(e) => setLoad(e.target.value)} /></div>
-            <div className="form-group"><label>跨度 (m)</label><input type="number" min="0" step="any" value={length} onChange={(e) => setLength(e.target.value)} /></div>
-            <div className="form-group"><label>梁宽 b (mm)</label><input type="number" min="0" step="any" value={width} onChange={(e) => setWidth(e.target.value)} /></div>
-            <div className="form-group"><label>梁高 h (mm)</label><input type="number" min="0" step="any" value={height} onChange={(e) => setHeight(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="beam-load-field-1">均布荷载 (kN/m)</label><input id="beam-load-field-1" type="number" min="0" step="any" value={load} onChange={(e) => setLoad(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="beam-load-field-2">跨度 (m)</label><input id="beam-load-field-2" type="number" min="0" step="any" value={length} onChange={(e) => setLength(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="beam-load-field-3">梁宽 b (mm)</label><input id="beam-load-field-3" type="number" min="0" step="any" value={width} onChange={(e) => setWidth(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="beam-load-field-4">梁高 h (mm)</label><input id="beam-load-field-4" type="number" min="0" step="any" value={height} onChange={(e) => setHeight(e.target.value)} /></div>
             <div className="form-group">
-              <label>弹性模量</label>
-              <select value={eVal} onChange={(e) => setEVal(e.target.value)}>
+              <label htmlFor="beam-load-field-5">弹性模量</label>
+              <select id="beam-load-field-5" value={eVal} onChange={(e) => setEVal(e.target.value)}>
                 {E_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
             </div>
             {error && <p style={{ color: 'red', margin: '0.5rem 0' }}>{error}</p>}
             <button onClick={calculate} style={{ width: '100%', padding: '1rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px' }}>计算</button>
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 <div className="result-item"><span className="result-label">截面惯性矩 I</span><span className="result-value">{result.I.toExponential(3)} mm⁴</span></div>
                 <div className="result-item"><span className="result-label">最大弯矩 M</span><span className="result-value">{result.M_max.toFixed(2)} kN·m</span></div>
                 <div className="result-item"><span className="result-label">最大弯曲应力 σ</span><span className="result-value">{result.sigma.toFixed(2)} MPa</span></div>
@@ -121,7 +120,6 @@ export default function BeamLoad() {
           <div className="disclaimer"><strong>免责声明：</strong>本计算器仅供工程参考，实际设计须由专业结构工程师复核。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

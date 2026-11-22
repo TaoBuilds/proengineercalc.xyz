@@ -25,15 +25,14 @@ export default function FlowConversion() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/fluid">💧 流体力学</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/fluid">流体力学</Link></div>
         <div className="calculator-container">
-          <h1 style={{fontSize:'1.75rem',fontWeight:700,margin:'2rem 0 1rem'}}>流量单位换算</h1>
+          <h1 className="page-title">流量单位换算</h1>
           <div className="calculator-form">
-            <div className="form-group"><label>数值</label><input type="number" value={value} onChange={(e)=>setValue(e.target.value)}/></div>
-            <div className="form-group"><label>源单位</label>
-              <select value={fromUnit} onChange={(e)=>setFromUnit(e.target.value)}>
+            <div className="form-group"><label htmlFor="flow-conversion-field-1">数值</label><input id="flow-conversion-field-1" type="number" value={value} onChange={(e)=>setValue(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="flow-conversion-field-2">源单位</label>
+              <select id="flow-conversion-field-2" value={fromUnit} onChange={(e)=>setFromUnit(e.target.value)}>
                 <option value="lps">L/s (升/秒)</option>
                 <option value="m3h">m³/h (立方米/小时)</option>
                 <option value="gpm">GPM (加仑/分钟)</option>
@@ -43,7 +42,7 @@ export default function FlowConversion() {
             </div>
             <button onClick={convert} style={{width:'100%',padding:'1rem',background:'var(--primary)',color:'white',border:'none',borderRadius:'8px'}}>换算</button>
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 <div className="result-item"><span className="result-label">L/s</span><span className="result-value">{result.lps}</span></div>
                 <div className="result-item"><span className="result-label">m³/h</span><span className="result-value">{result.m3h}</span></div>
                 <div className="result-item"><span className="result-label">GPM</span><span className="result-value">{result.gpm}</span></div>
@@ -72,7 +71,6 @@ export default function FlowConversion() {
           <div className="disclaimer"><strong>免责声明：</strong>所有计算结果仅供参照。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

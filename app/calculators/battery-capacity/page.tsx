@@ -32,20 +32,19 @@ export default function BatteryCapacity() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/electrical">⚡ 电气工程</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/electrical">电气工程</Link></div>
         <div className="calculator-container">
-          <h1 style={{fontSize:'1.75rem',fontWeight:700,margin:'2rem 0 1rem'}}>蓄电池容量计算器</h1>
+          <h1 className="page-title">蓄电池容量计算器</h1>
           <div className="calculator-form">
-            <div className="form-group"><label>负载功率 (W)</label><input type="number" value={power} onChange={(e)=>setPower(e.target.value)} /></div>
-            <div className="form-group"><label>备用时间 (h)</label><input type="number" value={hours} onChange={(e)=>setHours(e.target.value)} /></div>
-            <div className="form-group"><label>电池电压 (V)</label><input type="number" value={voltage} onChange={(e)=>setVoltage(e.target.value)} /></div>
-            <div className="form-group"><label>放电深度 DoD (%)</label><input type="number" value={dod} min="1" max="100" onChange={(e)=>setDod(e.target.value)} /></div>
-            <div className="form-group"><label>逆变器效率 (%)</label><input type="number" value={efficiency} min="1" max="100" onChange={(e)=>setEfficiency(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="battery-capacity-field-1">负载功率 (W)</label><input id="battery-capacity-field-1" type="number" value={power} onChange={(e)=>setPower(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="battery-capacity-field-2">备用时间 (h)</label><input id="battery-capacity-field-2" type="number" value={hours} onChange={(e)=>setHours(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="battery-capacity-field-3">电池电压 (V)</label><input id="battery-capacity-field-3" type="number" value={voltage} onChange={(e)=>setVoltage(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="battery-capacity-field-4">放电深度 DoD (%)</label><input id="battery-capacity-field-4" type="number" value={dod} min="1" max="100" onChange={(e)=>setDod(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="battery-capacity-field-5">逆变器效率 (%)</label><input id="battery-capacity-field-5" type="number" value={efficiency} min="1" max="100" onChange={(e)=>setEfficiency(e.target.value)} /></div>
             <button onClick={calculate} style={{width:'100%',padding:'1rem',background:'var(--primary)',color:'white',border:'none',borderRadius:'8px'}}>计算</button>
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 <div className="result-item"><span className="result-label">实际所需能量</span><span className="result-value">{result.whActual.toFixed(0)} Wh</span></div>
                 <div className="result-item"><span className="result-label">电池容量 (Wh)</span><span className="result-value">{result.whBattery.toFixed(0)} Wh</span></div>
                 <div className="result-item"><span className="result-label">电池容量 (Ah)</span><span className="result-value">{result.ahRaw.toFixed(1)} Ah</span></div>
@@ -92,7 +91,6 @@ export default function BatteryCapacity() {
           <div className="disclaimer"><strong>免责声明：</strong>所有计算结果仅供参考，实际选型请结合电池厂商规格和专业工程师意见。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

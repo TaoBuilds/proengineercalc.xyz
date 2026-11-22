@@ -1,4 +1,3 @@
-import Link from 'next/link'
 
 export const metadata = {
   title: '隐私政策 - 智效厂务工程计算器',
@@ -8,30 +7,9 @@ export const metadata = {
 export default function Privacy() {
   return (
     <>
-      <header className="header">
-        <div className="container header-content">
-          <h1 className="logo">
-            <Link href="/">🔧 智效厂务工程计算器</Link>
-          </h1>
-          <p className="tagline">专业工程师计算工具箱</p>
-        </div>
-      </header>
-
-      <nav className="nav">
-        <div className="container nav-inner">
-          <Link href="/">🏠 首页</Link>
-          <Link href="/calculators/hvac">🌡️ 暖通空调</Link>
-          <Link href="/calculators/electrical">⚡ 电气工程</Link>
-          <Link href="/calculators/fluid">💧 流体力学</Link>
-          <Link href="/calculators/structure">🏗️ 结构工程</Link>
-          <Link href="/terms">📄 使用条款</Link>
-          <Link href="/privacy">🔒 隐私政策</Link>
-        </div>
-      </nav>
-
-      <main className="container">
+      <main id="main-content" className="container">
         <div className="calculator-container">
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '2rem 0 1rem' }}>
+          <h1 className="page-title">
             隐私政策
           </h1>
 
@@ -74,12 +52,6 @@ export default function Privacy() {
           </div>
         </div>
       </main>
-
-      <footer>
-        <div className="container">
-          <p>© 2026 智效厂务工程计算器. 保留所有权利.</p>
-        </div>
-      </footer>
     </>
   )
 }

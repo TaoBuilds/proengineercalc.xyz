@@ -47,20 +47,19 @@ export default function PumpHead() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/hvac">🌡️ 暖通空调</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/hvac">暖通空调</Link></div>
         <div className="calculator-container">
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '2rem 0 1rem' }}>水泵扬程计算器</h1>
+          <h1 className="page-title">水泵扬程计算器</h1>
           <div className="calculator-form">
-            <div className="form-group"><label>流量 (m³/h)</label><input type="number" min="0.1" step="0.1" value={flow} onChange={(e) => setFlow(e.target.value)} /></div>
-            <div className="form-group"><label>管道内径 (mm)</label><input type="number" min="1" value={diameter} onChange={(e) => setDiameter(e.target.value)} /></div>
-            <div className="form-group"><label>管道长度 (m)</label><input type="number" min="0.1" step="0.1" value={length} onChange={(e) => setLength(e.target.value)} /></div>
-            <div className="form-group"><label>静扬程 (m)</label><input type="number" min="0" step="0.5" value={staticHead} onChange={(e) => setStaticHead(e.target.value)} /></div>
-            <div className="form-group"><label>局部损失系数 (%，占沿程损失的百分比)</label><input type="number" min="0" max="200" value={minorLoss} onChange={(e) => setMinorLoss(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="pump-head-field-1">流量 (m³/h)</label><input id="pump-head-field-1" type="number" min="0.1" step="0.1" value={flow} onChange={(e) => setFlow(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="pump-head-field-2">管道内径 (mm)</label><input id="pump-head-field-2" type="number" min="1" value={diameter} onChange={(e) => setDiameter(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="pump-head-field-3">管道长度 (m)</label><input id="pump-head-field-3" type="number" min="0.1" step="0.1" value={length} onChange={(e) => setLength(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="pump-head-field-4">静扬程 (m)</label><input id="pump-head-field-4" type="number" min="0" step="0.5" value={staticHead} onChange={(e) => setStaticHead(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="pump-head-field-5">局部损失系数 (%，占沿程损失的百分比)</label><input id="pump-head-field-5" type="number" min="0" max="200" value={minorLoss} onChange={(e) => setMinorLoss(e.target.value)} /></div>
             <button onClick={calculate} style={{ width: '100%', padding: '1rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px' }}>计算</button>
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 <div className="result-item"><span className="result-label">管内流速</span><span className="result-value">{result.velocity} m/s</span></div>
                 <div className="result-item"><span className="result-label">雷诺数 Re</span><span className="result-value">{result.Re} ({result.flowRegime})</span></div>
                 <div className="result-item"><span className="result-label">摩擦系数 f</span><span className="result-value">{result.f}</span></div>
@@ -141,7 +140,6 @@ export default function PumpHead() {
           <div className="disclaimer"><strong>免责声明：</strong>本计算结果仅供参考，不得直接用于正式工程设计。实际工程请委托具备资质的专业人员按相关规范进行计算。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

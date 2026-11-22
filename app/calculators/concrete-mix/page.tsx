@@ -34,23 +34,22 @@ export default function ConcreteMix() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/structure">🏗️ 结构工程</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/structure">结构工程</Link></div>
         <div className="calculator-container">
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '2rem 0 1rem' }}>混凝土配比计算器</h1>
+          <h1 className="page-title">混凝土配比计算器</h1>
           <div className="calculator-form">
-            <div className="form-group"><label>混凝土方量 (m³)</label><input type="number" min="0" step="any" value={volume} onChange={(e) => setVolume(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="concrete-mix-field-1">混凝土方量 (m³)</label><input id="concrete-mix-field-1" type="number" min="0" step="any" value={volume} onChange={(e) => setVolume(e.target.value)} /></div>
             <div className="form-group">
-              <label>混凝土等级</label>
-              <select value={grade} onChange={(e) => setGrade(e.target.value)}>
+              <label htmlFor="concrete-mix-field-2">混凝土等级</label>
+              <select id="concrete-mix-field-2" value={grade} onChange={(e) => setGrade(e.target.value)}>
                 {Object.keys(MIX).map((g) => <option key={g}>{g}</option>)}
               </select>
             </div>
             {error && <p style={{ color: 'red', margin: '0.5rem 0' }}>{error}</p>}
             <button onClick={calculate} style={{ width: '100%', padding: '1rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px' }}>计算</button>
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 <div className="result-item"><span className="result-label">水泥 (kg)</span><span className="result-value">{result.cement}</span></div>
                 <div className="result-item"><span className="result-label">砂 (kg)</span><span className="result-value">{result.sand}</span></div>
                 <div className="result-item"><span className="result-label">骨料 (kg)</span><span className="result-value">{result.aggregate}</span></div>
@@ -98,7 +97,6 @@ export default function ConcreteMix() {
           <div className="disclaimer"><strong>免责声明：</strong>本计算器仅供工程参考，实际配合比须经试验室试配确认，由专业工程师负责。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

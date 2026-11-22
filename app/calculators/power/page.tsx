@@ -47,33 +47,32 @@ export default function Power() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/electrical">⚡ 电气工程</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/electrical">电气工程</Link></div>
         <div className="calculator-container">
-          <h1 style={{fontSize:'1.75rem',fontWeight:700,margin:'2rem 0 1rem'}}>功率计算器</h1>
+          <h1 className="page-title">功率计算器</h1>
           <div className="calculator-form">
-            <div className="form-group"><label>计算模式</label>
-              <select value={mode} onChange={(e)=>setMode(e.target.value)}>
+            <div className="form-group"><label htmlFor="power-field-1">计算模式</label>
+              <select id="power-field-1" value={mode} onChange={(e)=>setMode(e.target.value)}>
                 <option value="power">计算功率（已知电流+电压）</option>
                 <option value="current">计算电流（已知功率+电压）</option>
                 <option value="voltage">计算电压（已知功率+电流）</option>
               </select>
             </div>
-            <div className="form-group"><label>相数</label>
-              <select value={phase} onChange={(e)=>setPhase(e.target.value)}>
+            <div className="form-group"><label htmlFor="power-field-2">相数</label>
+              <select id="power-field-2" value={phase} onChange={(e)=>setPhase(e.target.value)}>
                 <option value="single">单相</option>
                 <option value="three">三相</option>
               </select>
             </div>
-            <div className="form-group"><label>功率因数</label><input type="number" value={pf} onChange={(e)=>setPf(e.target.value)} step="0.01"/></div>
-            <div className="form-group"><label>电流 (A) {mode==='current'?'':'*'}</label><input type="number" value={current} onChange={(e)=>setCurrent(e.target.value)}/></div>
-            <div className="form-group"><label>电压 (V) {mode==='voltage'?'':'*'}</label><input type="number" value={voltage} onChange={(e)=>setVoltage(e.target.value)}/></div>
-            <div className="form-group"><label>功率 (W) {mode==='power'?'':'*'}</label><input type="number" value={power} onChange={(e)=>setPower(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="power-field-3">功率因数</label><input id="power-field-3" type="number" value={pf} onChange={(e)=>setPf(e.target.value)} step="0.01"/></div>
+            <div className="form-group"><label htmlFor="power-field-4">电流 (A) {mode==='current'?'':'*'}</label><input id="power-field-4" type="number" value={current} onChange={(e)=>setCurrent(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="power-field-5">电压 (V) {mode==='voltage'?'':'*'}</label><input id="power-field-5" type="number" value={voltage} onChange={(e)=>setVoltage(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="power-field-6">功率 (W) {mode==='power'?'':'*'}</label><input id="power-field-6" type="number" value={power} onChange={(e)=>setPower(e.target.value)}/></div>
             <button onClick={calculate} style={{width:'100%',padding:'1rem',background:'var(--primary)',color:'white',border:'none',borderRadius:'8px'}}>计算</button>
             {error && <p role="alert" style={{color:'#b91c1c'}}>{error}</p>}
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 {result.power && <div className="result-item"><span className="result-label">有功功率</span><span className="result-value">{result.power} W</span></div>}
                 {result.apparent && <div className="result-item"><span className="result-label">视在功率</span><span className="result-value">{result.apparent} VA</span></div>}
                 {result.reactive && <div className="result-item"><span className="result-label">无功功率</span><span className="result-value">{result.reactive} VAR</span></div>}
@@ -115,7 +114,6 @@ export default function Power() {
           <div className="disclaimer"><strong>免责声明：</strong>计算基于平衡正弦交流稳态；三相电压应输入线电压。设备选型需考虑谐波、启动及实际负载。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

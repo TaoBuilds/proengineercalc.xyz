@@ -1,157 +1,47 @@
+import type {Metadata} from 'next'
 import Link from 'next/link'
+import CalculatorDirectory from '../components/CalculatorDirectory'
 
-const calculators = {
-  hvac: [
-    { slug: 'dewpoint', title: '露点计算器', desc: '根据海拔、温度和湿度计算露点温度' },
-    { slug: 'psychrometric', title: '湿空气性质计算器', desc: '计算焓值、含湿量及空气其他参数' },
-    { slug: 'duct-velocity', title: '风管风速计算器', desc: '计算矩形和圆形风管内的空气流速' },
-    { slug: 'cooling-load', title: '冷负荷估算器', desc: '快速估算建筑冷负荷' },
-    { slug: 'pump-head', title: '水泵扬程计算器', desc: '计算暖通空调系统所需的水泵扬程' },
-    { slug: 'air-changes', title: '换气次数计算器', desc: '根据房间尺寸和换气次数计算所需风量' },
-  ],
-  electrical: [
-    { slug: 'power', title: '功率计算器', desc: '根据任意两个已知值计算功率、电流、电压' },
-    { slug: 'voltage-drop', title: '电压降计算器', desc: '计算电力线路的电压损失' },
-    { slug: 'cable-ampacity', title: '电缆载流量计算器', desc: '计算电缆的安全载流量' },
-    { slug: 'illuminance', title: '照度计算器', desc: '计算室内照明水平' },
-    { slug: 'battery-capacity', title: '蓄电池容量计算器', desc: '计算备用电源的电池容量' },
-    { slug: 'transformer-capacity', title: '变压器容量计算器', desc: '根据用电负荷计算所需变压器容量' },
-    { slug: 'motor-current', title: '电机电流计算器', desc: '计算电机额定电流和启动电流' },
-  ],
-  fluid: [
-    { slug: 'pipe-pressure', title: '管道压力损失计算器', desc: '计算管道系统的压力降' },
-    { slug: 'flow-conversion', title: '流量单位换算', desc: 'GPM、L/s、m³/h 之间互转' },
-    { slug: 'reynolds', title: '雷诺数计算器', desc: '计算管道流动的雷诺数' },
-  ],
-  structure: [
-    { slug: 'concrete-mix', title: '混凝土配比计算器', desc: '计算混凝土配合比' },
-    { slug: 'beam-load', title: '梁荷载计算器', desc: '计算梁的挠度和应力' },
-    { slug: 'unit-converter', title: '单位换算器', desc: '工程单位之间的换算' },
-    { slug: 'steel-weight', title: '钢材重量计算器', desc: '计算各类型钢材的重量' },
-  ],
-}
+export const metadata: Metadata = {alternates: {canonical: '/'}}
 
 export default function Home() {
   return (
-    <>
-      {/* Header */}
-      <header className="header">
-        <div className="container header-content">
-          <h1 className="logo">
-            <Link href="/">🔧 智效厂务工程计算器</Link>
-          </h1>
-          <p className="tagline">专业工程师计算工具箱</p>
+    <main id="main-content" className="container workbench">
+      <section className="workbench-hero">
+        <div className="workbench-intro">
+          <p className="workbench-kicker">暖通 · 电气 · 流体 · 结构</p>
+          <h1>厂务工程计算器</h1>
+          <p>快速估算常用工程参数。每个计算器都能单独打开，输入所需数据后即可查看结果。</p>
+          <a href="#calculator-directory" className="workbench-button">查找计算器</a>
         </div>
-      </header>
-
-      {/* Navigation */}
-      <nav className="nav">
-        <div className="container nav-inner">
-          <Link href="/" className="active">🏠 首页</Link>
-          <Link href="/calculators/hvac">🌡️ 暖通空调</Link>
-          <Link href="/calculators/electrical">⚡ 电气工程</Link>
-          <Link href="/calculators/fluid">💧 流体力学</Link>
-          <Link href="/calculators/structure">🏗️ 结构工程</Link>
-          <Link href="/terms">📄 使用条款</Link>
-          <Link href="/privacy">🔒 隐私政策</Link>
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <main className="container">
-        {/* HVAC Section */}
-        <section className="category-section">
-          <h2 className="category-title">🌡️ 暖通空调与制冷</h2>
-          <div className="calculator-grid">
-            {calculators.hvac.map((calc) => (
-              <Link 
-                key={calc.slug} 
-                href={`/calculators/${calc.slug}`}
-                className="calculator-card"
-              >
-                <h3>{calc.title}</h3>
-                <p>{calc.desc}</p>
-              </Link>
-            ))}
+        <div className="workbench-example">
+          <p>变压器容量算例</p>
+          <dl>
+            <div><dt>总设备功率</dt><dd>500 <small>kW</small></dd></div>
+            <div><dt>需用 / 同时系数</dt><dd>0.70 / 0.90</dd></div>
+            <div><dt>功率因数 / 余量系数</dt><dd>0.85 / 1.20</dd></div>
+          </dl>
+          <div className="example-output">
+            <div><span>估算所需容量</span><strong>444.7 <small>kVA</small></strong></div>
+            <Link href="/calculators/transformer-capacity">试用计算器</Link>
           </div>
-        </section>
-
-        {/* Electrical Section */}
-        <section className="category-section">
-          <h2 className="category-title">⚡ 电气工程</h2>
-          <div className="calculator-grid">
-            {calculators.electrical.map((calc) => (
-              <Link 
-                key={calc.slug} 
-                href={`/calculators/${calc.slug}`}
-                className="calculator-card"
-              >
-                <h3>{calc.title}</h3>
-                <p>{calc.desc}</p>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* Fluid Section */}
-        <section className="category-section">
-          <h2 className="category-title">💧 流体力学</h2>
-          <div className="calculator-grid">
-            {calculators.fluid.map((calc) => (
-              <Link 
-                key={calc.slug} 
-                href={`/calculators/${calc.slug}`}
-                className="calculator-card"
-              >
-                <h3>{calc.title}</h3>
-                <p>{calc.desc}</p>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* Structure Section */}
-        <section className="category-section">
-          <h2 className="category-title">🏗️ 结构工程</h2>
-          <div className="calculator-grid">
-            {calculators.structure.map((calc) => (
-              <Link 
-                key={calc.slug} 
-                href={`/calculators/${calc.slug}`}
-                className="calculator-card"
-              >
-                <h3>{calc.title}</h3>
-                <p>{calc.desc}</p>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* Disclaimer */}
-        <div className="disclaimer">
-          <strong>⚠️ 免责声明：</strong>本网站所有计算结果仅供参照之用。
-          请勿将计算结果作为工程设计或施工的最终依据。
-          如需进行实际工程项目，请咨询有执照的专业工程师。
         </div>
+      </section>
 
-        {/* WeChat QR Code */}
-        <div style={{ textAlign: 'center', margin: '2rem 0', padding: '2rem', background: '#f0f9ff', borderRadius: '12px' }}>
-          <h3 style={{ marginBottom: '1rem', color: 'var(--text)' }}>关注公众号</h3>
-          <p style={{ color: 'var(--text-light)', marginBottom: '1.5rem', fontSize: '0.875rem' }}>扫码关注「智效厂务」，获取更多厂务技术文章</p>
-          <img 
-            src="/wechat-qr.jpg" 
-            alt="智效厂务公众号二维码" 
-            style={{ width: '200px', height: '200px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} 
-          />
-        </div>
-      </main>
+      <CalculatorDirectory />
 
-      {/* Footer */}
-      <footer>
-        <div className="container">
-          <p>© 2026 智效厂务工程计算器. 保留所有权利.</p>
+      <aside className="workbench-resources" aria-labelledby="resources-title">
+        <div>
+          <h2 id="resources-title">工程文章与案例</h2>
+          <p>了解洁净室空调、循环水、空压系统和厂务运维中的实际工况。</p>
+          <a href="https://factoryenergy.site/">阅读厂务能源网</a>
         </div>
-      </footer>
-    </>
+        <figure>
+          <img src="/wechat-qr.jpg" alt="智效厂务微信公众号二维码" width="116" height="116" loading="lazy" />
+          <figcaption>扫码关注智效厂务</figcaption>
+        </figure>
+      </aside>
+      <p className="disclaimer">计算结果用于初步估算。实际设计和施工须由具备相应资质的人员按适用规范复核。</p>
+    </main>
   )
 }

@@ -70,28 +70,27 @@ export default function UnitConverter() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/structure">🏗️ 结构工程</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/structure">结构工程</Link></div>
         <div className="calculator-container">
-          <h1 style={{fontSize:'1.75rem',fontWeight:700,margin:'2rem 0 1rem'}}>单位换算器</h1>
+          <h1 className="page-title">单位换算器</h1>
           <div className="calculator-form">
-            <div className="form-group"><label>数值</label><input type="number" value={value} onChange={(e)=>setValue(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="unit-converter-field-1">数值</label><input id="unit-converter-field-1" type="number" value={value} onChange={(e)=>setValue(e.target.value)} /></div>
             <div className="form-group">
-              <label>类别</label>
-              <select value={category} onChange={(e)=>handleCategoryChange(e.target.value)}>
+              <label htmlFor="unit-converter-field-2">类别</label>
+              <select id="unit-converter-field-2" value={category} onChange={(e)=>handleCategoryChange(e.target.value)}>
                 {Object.entries(categoryLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
             <div className="form-group">
-              <label>源单位</label>
-              <select value={from} onChange={(e)=>setFrom(e.target.value)}>
+              <label htmlFor="unit-converter-field-3">源单位</label>
+              <select id="unit-converter-field-3" value={from} onChange={(e)=>setFrom(e.target.value)}>
                 {currentUnitKeys.map(u => <option key={u} value={u}>{unitLabels[category][u]}</option>)}
               </select>
             </div>
             <button onClick={calculate} style={{width:'100%',padding:'1rem',background:'var(--primary)',color:'white',border:'none',borderRadius:'8px'}}>换算</button>
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 {Object.entries(result).map(([k, v]) => (
                   <div key={k} className="result-item">
                     <span className="result-label">{k}</span>
@@ -134,7 +133,6 @@ export default function UnitConverter() {
           <div className="disclaimer"><strong>免责声明：</strong>所有计算结果仅供参考。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

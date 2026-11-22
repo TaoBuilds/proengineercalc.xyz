@@ -47,27 +47,26 @@ export default function Reynolds() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/fluid">💧 流体力学</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/fluid">流体力学</Link></div>
         <div className="calculator-container">
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '2rem 0 1rem' }}>雷诺数计算器</h1>
+          <h1 className="page-title">雷诺数计算器</h1>
           <div className="calculator-form">
             <div className="form-group">
-              <label>流体选择</label>
-              <select value={fluid} onChange={(e) => handleFluidChange(e.target.value)}>
+              <label htmlFor="reynolds-field-1">流体选择</label>
+              <select id="reynolds-field-1" value={fluid} onChange={(e) => handleFluidChange(e.target.value)}>
                 {FLUIDS.map(f => <option key={f.label} value={f.label}>{f.label}</option>)}
               </select>
             </div>
-            <div className="form-group"><label>流速 (m/s)</label><input type="number" min="0.001" step="0.1" value={velocity} onChange={(e) => setVelocity(e.target.value)} /></div>
-            <div className="form-group"><label>特征尺寸 / 管道直径 (mm)</label><input type="number" min="0.1" value={diameter} onChange={(e) => setDiameter(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="reynolds-field-2">流速 (m/s)</label><input id="reynolds-field-2" type="number" min="0.001" step="0.1" value={velocity} onChange={(e) => setVelocity(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="reynolds-field-3">特征尺寸 / 管道直径 (mm)</label><input id="reynolds-field-3" type="number" min="0.1" value={diameter} onChange={(e) => setDiameter(e.target.value)} /></div>
             <div className="form-group">
-              <label>运动粘度 ν (m²/s)</label>
-              <input type="number" step="any" value={nu} onChange={(e) => { setNu(e.target.value); setFluid('自定义') }} />
+              <label htmlFor="reynolds-field-4">运动粘度 ν (m²/s)</label>
+              <input id="reynolds-field-4" type="number" step="any" value={nu} onChange={(e) => { setNu(e.target.value); setFluid('自定义') }} />
             </div>
             <button onClick={calculate} style={{ width: '100%', padding: '1rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px' }}>计算</button>
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 <div className="result-item"><span className="result-label">雷诺数 Re</span><span className="result-value">{result.Re}</span></div>
                 <div className="result-item"><span className="result-label">流态</span><span className="result-value">{result.regime}</span></div>
                 <div className="result-item" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.25rem' }}>
@@ -151,7 +150,6 @@ export default function Reynolds() {
           <div className="disclaimer"><strong>免责声明：</strong>本计算结果仅供参考，不得直接用于正式工程设计。实际工程请委托具备资质的专业人员按相关规范进行计算。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

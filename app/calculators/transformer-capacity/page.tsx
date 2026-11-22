@@ -34,21 +34,20 @@ export default function TransformerCapacity() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1><p className="tagline">专业工程师计算工具箱</p></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/hvac">🌡️ 暖通空调</Link><Link href="/calculators/electrical">⚡ 电气工程</Link><Link href="/calculators/fluid">💧 流体力学</Link><Link href="/calculators/structure">🏗️ 结构工程</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/electrical">电气工程</Link></div>
         <div className="calculator-container">
-          <h1 style={{fontSize:'1.75rem',fontWeight:700,margin:'2rem 0 1rem'}}>变压器容量计算器</h1>
+          <h1 className="page-title">变压器容量计算器</h1>
           <div className="calculator-form">
-            <div className="form-group"><label>总设备功率 (kW)</label><input type="number" value={pTotal} onChange={(e)=>setPTotal(e.target.value)}/></div>
-            <div className="form-group"><label>需用系数 (0~1)</label><input type="number" step="0.01" value={demand} onChange={(e)=>setDemand(e.target.value)}/></div>
-            <div className="form-group"><label>同时系数 (0~1)</label><input type="number" step="0.01" value={simultaneous} onChange={(e)=>setSimultaneous(e.target.value)}/></div>
-            <div className="form-group"><label>功率因数 (0~1)</label><input type="number" step="0.01" value={pf} onChange={(e)=>setPf(e.target.value)}/></div>
-            <div className="form-group"><label>余量系数</label><input type="number" step="0.01" value={margin} onChange={(e)=>setMargin(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="transformer-capacity-field-1">总设备功率 (kW)</label><input id="transformer-capacity-field-1" type="number" value={pTotal} onChange={(e)=>setPTotal(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="transformer-capacity-field-2">需用系数 (0~1)</label><input id="transformer-capacity-field-2" type="number" step="0.01" value={demand} onChange={(e)=>setDemand(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="transformer-capacity-field-3">同时系数 (0~1)</label><input id="transformer-capacity-field-3" type="number" step="0.01" value={simultaneous} onChange={(e)=>setSimultaneous(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="transformer-capacity-field-4">功率因数 (0~1)</label><input id="transformer-capacity-field-4" type="number" step="0.01" value={pf} onChange={(e)=>setPf(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="transformer-capacity-field-5">余量系数</label><input id="transformer-capacity-field-5" type="number" step="0.01" value={margin} onChange={(e)=>setMargin(e.target.value)}/></div>
             <button onClick={calculate} style={{width:'100%',padding:'1rem',background:'var(--primary)',color:'white',border:'none',borderRadius:'8px',fontSize:'1rem',fontWeight:600,cursor:'pointer'}}>计算</button>
             {error && <p role="alert" style={{color:'#b91c1c'}}>{error}</p>}
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 <div className="result-item"><span className="result-label">计算负荷</span><span className="result-value">{result.P_calc} kW</span></div>
                 <div className="result-item"><span className="result-label">视在功率</span><span className="result-value">{result.S_calc} kVA</span></div>
                 <div className="result-item"><span className="result-label">所需容量（含余量）</span><span className="result-value">{result.S_required} kVA</span></div>
@@ -98,7 +97,6 @@ export default function TransformerCapacity() {
           <div className="disclaimer"><strong>免责声明：</strong>容量仅为初步估算。须复核温升、谐波、负荷性质、短路水平、冗余及变电站方案，按当地规范由专业工程师审核。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

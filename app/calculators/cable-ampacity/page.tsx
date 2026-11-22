@@ -2,101 +2,70 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import {estimateCableAmpacity, INSTALL_METHODS} from '../../../lib/cable-ampacity'
+import type {ConductorMaterial, InstallMethod} from '../../../lib/cable-ampacity'
 
 export default function CableAmpacity() {
-  const [conductorType, setConductorType] = useState('copper')
+  const [conductorType, setConductorType] = useState<ConductorMaterial>('copper')
   const [size, setSize] = useState(2.5)
-  const [installMethod, setInstallMethod] = useState('B1')
-  const [temp, setTemp] = useState(30)
+  const [installMethod, setInstallMethod] = useState<InstallMethod>('B1')
+  const [temp, setTemp] = useState('30')
   const [result, setResult] = useState<number | null>(null)
   const [error, setError] = useState('')
 
   const calculate = () => {
-    const copperBase: Record<number, number> = {
-      1.5: 15.5, 2.5: 21, 4: 28, 6: 36, 10: 50, 16: 68, 25: 89, 35: 110, 50: 134, 70: 171, 95: 207, 120: 239
-    }
-    const aluminumBase: Record<number, number> = {
-      1.5: 12, 2.5: 16.5, 4: 22, 6: 28, 10: 39, 16: 53, 25: 70, 35: 86, 50: 104, 70: 133, 95: 161, 120: 186
-    }
-    const methodFactors: Record<string, number> = {
-      'A1': 0.77, 'A2': 0.80, 'B1': 1.0, 'B2': 0.95, 'C': 1.15, 'D': 1.08
-    }
-    const baseTable = conductorType === 'copper' ? copperBase : aluminumBase
-    if (!Number.isFinite(size) || !Number.isFinite(temp) || temp < -20 || temp >= 70 || !(size in baseTable)) {
-      setError('请使用表中支持的导体截面积；环境温度须在 -20～70°C 以下')
+    try {
+      setResult(estimateCableAmpacity(conductorType, size, installMethod, parseFloat(temp)))
+      setError('')
+    } catch (err) {
       setResult(null)
-      return
+      setError(err instanceof Error ? err.message : '输入参数无效')
     }
-    setError('')
-    const baseAmp = baseTable[size]
-    // Simplified 70°C-conductor approximation. Not a normative installation rating.
-    const tempFactor = temp <= 30 ? 1.0 : Math.sqrt((70 - temp) / 40)
-    const ampacity = baseAmp * (methodFactors[installMethod] || 1) * tempFactor
-    setResult(Math.round(ampacity * 10) / 10)
   }
 
   return (
     <>
-      <header className="header">
-        <div className="container header-content">
-          <h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1>
-          <p className="tagline">专业工程师计算工具箱</p>
-        </div>
-      </header>
-
-      <nav className="nav">
-        <div className="container nav-inner">
-          <Link href="/">🏠 首页</Link>
-          <Link href="/calculators/hvac">🌡️ 暖通空调</Link>
-          <Link href="/calculators/electrical">⚡ 电气工程</Link>
-          <Link href="/calculators/fluid">💧 流体力学</Link>
-          <Link href="/calculators/structure">🏗️ 结构工程</Link>
-        </div>
-      </nav>
-
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/electrical">电气工程</Link></div>
         <div className="calculator-container">
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '2rem 0 1rem' }}>电缆载流量计算器</h1>
+          <h1 className="page-title">电缆载流量计算器</h1>
 
           <div className="calculator-form">
             <div className="form-group">
-              <label>导体材质</label>
-              <select value={conductorType} onChange={(e) => setConductorType(e.target.value)}>
+              <label htmlFor="cable-ampacity-field-1">导体材质</label>
+              <select id="cable-ampacity-field-1" value={conductorType} onChange={(e) => setConductorType(e.target.value as ConductorMaterial)}>
                 <option value="copper">铜</option>
                 <option value="aluminum">铝</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label>导体截面积 (mm²)</label>
-              <input type="number" value={size} onChange={(e) => setSize(Number(e.target.value))} />
+              <label htmlFor="cable-ampacity-field-2">导体截面积 (mm²)</label>
+              <input id="cable-ampacity-field-2" type="number" value={size} onChange={(e) => setSize(Number(e.target.value))} />
             </div>
 
             <div className="form-group">
-              <label>敷设方式</label>
-              <select value={installMethod} onChange={(e) => setInstallMethod(e.target.value)}>
-                <option value="A1">A1 - 墙内导管</option>
-                <option value="A2">A2 - 墙内导管</option>
-                <option value="B1">B1 - 墙上导管</option>
-                <option value="B2">B2 - 墙上导管</option>
-                <option value="C">C - 空气中电缆</option>
-                <option value="D">D - 直埋</option>
+              <label htmlFor="cable-ampacity-field-3">敷设方式</label>
+              <select id="cable-ampacity-field-3" value={installMethod} onChange={(e) => setInstallMethod(e.target.value as InstallMethod)}>
+                {Object.entries(INSTALL_METHODS).map(([code, method]) => (
+                  <option key={code} value={code}>{code} - {method.label}</option>
+                ))}
               </select>
             </div>
 
             <div className="form-group">
-              <label>环境温度 (°C)</label>
-              <input type="number" value={temp} onChange={(e) => setTemp(Number(e.target.value))} />
+              <label htmlFor="cable-ampacity-field-4">环境温度 (°C)</label>
+              <input id="cable-ampacity-field-4" type="number" value={temp} onChange={(e) => setTemp(e.target.value)} />
             </div>
 
             <button onClick={calculate} style={{ width: '100%', padding: '1rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '1rem', fontWeight: 600, cursor: 'pointer' }}>计算</button>
 
             {error && <p role="alert" style={{color:'#b91c1c'}}>{error}</p>}
             {result !== null && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 <h4>计算结果</h4>
                 <div className="result-item">
-                  <span className="result-label">安全载流量</span>
+                  <span className="result-label">估算载流量</span>
                   <span className="result-value">{result} A</span>
                 </div>
               </div>
@@ -107,13 +76,12 @@ export default function CableAmpacity() {
             <h2>公式与原理</h2>
             <p>电缆载流量根据导体截面积、材质、敷设方式和环境温度计算。</p>
             <div className="formula-box">
-              I = A × I_density × F_method × F_temp<br/><br/>
+              I = I_base × F_method × F_temp<br/><br/>
               其中:<br/>
               I = 载流量 (A)<br/>
-              A = 截面积 (mm²)<br/>
-              I_density = 电流密度 (A/mm²)<br/>
+              I_base = 按导体材质和截面积查表的基准电流 (A)<br/>
               F_method = 敷设方式系数<br/>
-              F_temp = 温度系数
+              F_temp = 温度系数（30°C 及以下取 1，高于 30°C 采用 70°C 导体温度的简化模型）
             </div>
           </div>
 
@@ -133,8 +101,6 @@ export default function CableAmpacity() {
           </div>
         </div>
       </main>
-
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }
