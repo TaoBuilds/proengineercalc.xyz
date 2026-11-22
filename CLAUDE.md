@@ -11,22 +11,21 @@ npm run lint     # ESLint via next lint
 npm run start    # Start production server
 ```
 
-No test framework is configured.
+Run `npm run test:engineering` on Node.js 22 for regression tests of the formulas in `lib/`.
 
 ## Architecture
 
-Next.js 14 App Router project with no `src/` directory, no UI library, no state management, and no shared layout component.
+Next.js 14 App Router project. `app/layout.tsx` renders the shared site navigation and footer. The home and category pages read their tool listings from `lib/calculator-catalog.ts`.
 
 **Routing:**
-- `/` — Home page with all calculators grouped by category (`app/page.tsx`)
+- `/` — Searchable directory of all calculators (`app/page.tsx`)
 - `/calculators/hvac|electrical|fluid|structure` — Category listing pages (server components)
 - `/calculators/[slug]` — Individual calculators, each a physically separate `page.tsx` (not a dynamic route)
 
-**Calculator page pattern** — every calculator page is self-contained:
+**Calculator page pattern:**
 - `'use client'` directive at top
-- Pure math functions defined above the component
+- Calculation functions live in the relevant page or a tested module in `lib/`
 - State via `useState`; results update either on button click or reactively via `useEffect` (both patterns exist)
-- Renders its own header/nav/footer boilerplate (copy-pasted across pages — no shared layout)
 - Uses global CSS class names: `.calculator-container`, `.calculator-form`, `.result-group`, `.result-item`, `.content-section`, `.formula-box`, `.disclaimer`
 
 **Shared component:** `components/CalculatorContent.tsx` exports `FormulaSection`, `TermsSection`, `GuideSection`, `FAQSection`, `CaseSection` for SEO content below the calculator form. Some pages use it; others inline the same content as HTML — both patterns coexist.
@@ -36,6 +35,5 @@ Next.js 14 App Router project with no `src/` directory, no UI library, no state 
 ## Adding a New Calculator
 
 1. Create `app/calculators/[new-slug]/page.tsx` — copy an existing calculator as a template
-2. Register it in `app/page.tsx` (home page category array)
-3. Register it in `app/calculators/[category]/page.tsx` (category listing)
-4. Manually add the URL to `public/sitemap.xml`
+2. Register it in the appropriate category in `lib/calculator-catalog.ts`
+3. Add the URL to `public/sitemap.xml`

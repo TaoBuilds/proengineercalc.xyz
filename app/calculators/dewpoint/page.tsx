@@ -38,35 +38,17 @@ export default function DewPointCalculator() {
 
   return (
     <>
-      <header className="header">
-        <div className="container header-content">
-          <h1 className="logo">
-            <Link href="/">🔧 智效厂务工程计算器</Link>
-          </h1>
-          <p className="tagline">专业工程师计算工具箱</p>
-        </div>
-      </header>
-
-      <nav className="nav">
-        <div className="container nav-inner">
-          <Link href="/">🏠 首页</Link>
-          <Link href="/calculators/hvac">🌡️ 暖通空调</Link>
-          <Link href="/calculators/electrical">⚡ 电气工程</Link>
-          <Link href="/calculators/fluid">💧 流体力学</Link>
-          <Link href="/calculators/structure">🏗️ 结构工程</Link>
-        </div>
-      </nav>
-
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/hvac">暖通空调</Link></div>
         <div className="calculator-container">
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '2rem 0 1rem' }}>
+          <h1 className="page-title">
             🌡️ 露点与湿空气计算器
           </h1>
           
           <div className="calculator-form">
             <div className="form-group">
-              <label>海拔 (m)</label>
-              <input
+              <label htmlFor="dewpoint-field-1">海拔 (m)</label>
+              <input id="dewpoint-field-1"
                 type="number"
                 value={altitude}
                 onChange={(e) => setAltitude(Number(e.target.value))}
@@ -76,8 +58,8 @@ export default function DewPointCalculator() {
             </div>
 
             <div className="form-group">
-              <label>温度 (°C)</label>
-              <input
+              <label htmlFor="dewpoint-field-2">温度 (°C)</label>
+              <input id="dewpoint-field-2"
                 type="number"
                 value={temperature}
                 onChange={(e) => setTemperature(Number(e.target.value))}
@@ -86,8 +68,8 @@ export default function DewPointCalculator() {
             </div>
 
             <div className="form-group">
-              <label>相对湿度 (%)</label>
-              <input
+              <label htmlFor="dewpoint-field-3">相对湿度 (%)</label>
+              <input id="dewpoint-field-3"
                 type="number"
                 value={humidity}
                 onChange={(e) => setHumidity(Number(e.target.value))}
@@ -99,7 +81,7 @@ export default function DewPointCalculator() {
 
             {error && <p role="alert" style={{color:'#b91c1c'}}>{error}</p>}
             {results && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 <h4>📊 计算结果</h4>
                 <div className="result-item">
                   <span className="result-label">露点温度</span>
@@ -224,12 +206,6 @@ export default function DewPointCalculator() {
           </div>
         </div>
       </main>
-
-      <footer>
-        <div className="container">
-          <p>© 2026 智效厂务工程计算器</p>
-        </div>
-      </footer>
     </>
   )
 }

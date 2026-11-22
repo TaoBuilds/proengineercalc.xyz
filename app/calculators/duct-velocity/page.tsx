@@ -43,24 +43,23 @@ export default function DuctVelocity() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/hvac">🌡️ 暖通空调</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/hvac">暖通空调</Link></div>
         <div className="calculator-container">
-          <h1 style={{fontSize:'1.75rem',fontWeight:700,margin:'2rem 0 1rem'}}>风管风速计算器</h1>
+          <h1 className="page-title">风管风速计算器</h1>
           <div className="calculator-form">
-            <div className="form-group"><label>计算模式</label>
-              <select value={mode} onChange={(e)=>setMode(e.target.value)}>
+            <div className="form-group"><label htmlFor="duct-velocity-field-1">计算模式</label>
+              <select id="duct-velocity-field-1" value={mode} onChange={(e)=>setMode(e.target.value)}>
                 <option value="velocity">计算风速（已知流量）</option>
                 <option value="flowRate">计算风量（已知风速）</option>
                 <option value="diameter">计算管径（已知风速）</option>
               </select>
             </div>
-            <div className="form-group"><label>风量 (m³/h)</label><input type="number" value={flowRate} onChange={(e)=>setFlowRate(e.target.value)}/></div>
-            <div className="form-group"><label>管径 (mm)</label><input type="number" value={diameter} onChange={(e)=>setDiameter(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="duct-velocity-field-2">风量 (m³/h)</label><input id="duct-velocity-field-2" type="number" value={flowRate} onChange={(e)=>setFlowRate(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="duct-velocity-field-3">管径 (mm)</label><input id="duct-velocity-field-3" type="number" value={diameter} onChange={(e)=>setDiameter(e.target.value)}/></div>
             <button onClick={calculate} style={{width:'100%',padding:'1rem',background:'var(--primary)',color:'white',border:'none',borderRadius:'8px'}}>计算</button>
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 {result.velocity && <div className="result-item"><span className="result-label">风速</span><span className="result-value">{result.velocity} m/s</span></div>}
                 {result.velocityFPM && <div className="result-item"><span className="result-label">风速</span><span className="result-value">{result.velocityFPM} fpm</span></div>}
                 {result.flowRate && <div className="result-item"><span className="result-label">风量</span><span className="result-value">{result.flowRate} m³/h</span></div>}
@@ -93,7 +92,6 @@ export default function DuctVelocity() {
           <div className="disclaimer"><strong>免责声明：</strong>所有计算结果仅供参照。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

@@ -33,26 +33,25 @@ export default function AirChanges() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1><p className="tagline">专业工程师计算工具箱</p></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/hvac">🌡️ 暖通空调</Link><Link href="/calculators/electrical">⚡ 电气工程</Link><Link href="/calculators/fluid">💧 流体力学</Link><Link href="/calculators/structure">🏗️ 结构工程</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/hvac">暖通空调</Link></div>
         <div className="calculator-container">
-          <h1 style={{fontSize:'1.75rem',fontWeight:700,margin:'2rem 0 1rem'}}>换气次数计算器</h1>
+          <h1 className="page-title">换气次数计算器</h1>
           <div className="calculator-form">
-            <div className="form-group"><label>房间长度 (m)</label><input type="number" value={roomL} onChange={(e)=>setRoomL(e.target.value)}/></div>
-            <div className="form-group"><label>房间宽度 (m)</label><input type="number" value={roomW} onChange={(e)=>setRoomW(e.target.value)}/></div>
-            <div className="form-group"><label>房间高度 (m)</label><input type="number" value={roomH} onChange={(e)=>setRoomH(e.target.value)}/></div>
-            <div className="form-group"><label>换气次数标准</label>
-              <select value={achPreset} onChange={(e)=>setAchPreset(e.target.value)}>
+            <div className="form-group"><label htmlFor="air-changes-field-1">房间长度 (m)</label><input id="air-changes-field-1" type="number" value={roomL} onChange={(e)=>setRoomL(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="air-changes-field-2">房间宽度 (m)</label><input id="air-changes-field-2" type="number" value={roomW} onChange={(e)=>setRoomW(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="air-changes-field-3">房间高度 (m)</label><input id="air-changes-field-3" type="number" value={roomH} onChange={(e)=>setRoomH(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="air-changes-field-4">换气次数标准</label>
+              <select id="air-changes-field-4" value={achPreset} onChange={(e)=>setAchPreset(e.target.value)}>
                 {Object.entries(presets).map(([k,v])=><option key={k} value={k}>{v}</option>)}
               </select>
             </div>
             {achPreset === 'custom' && (
-              <div className="form-group"><label>自定义换气次数 (次/h)</label><input type="number" value={customAch} onChange={(e)=>setCustomAch(e.target.value)} placeholder="请输入换气次数"/></div>
+              <div className="form-group"><label htmlFor="air-changes-field-5">自定义换气次数 (次/h)</label><input id="air-changes-field-5" type="number" value={customAch} onChange={(e)=>setCustomAch(e.target.value)} placeholder="请输入换气次数"/></div>
             )}
             <button onClick={calculate} style={{width:'100%',padding:'1rem',background:'var(--primary)',color:'white',border:'none',borderRadius:'8px',fontSize:'1rem',fontWeight:600,cursor:'pointer'}}>计算</button>
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 <div className="result-item"><span className="result-label">房间体积</span><span className="result-value">{result.volume} m³</span></div>
                 <div className="result-item"><span className="result-label">换气次数</span><span className="result-value">{result.ach} 次/h</span></div>
                 <div className="result-item"><span className="result-label">所需风量</span><span className="result-value">{result.flowRate} m³/h</span></div>
@@ -101,7 +100,6 @@ export default function AirChanges() {
           <div className="disclaimer"><strong>免责声明：</strong>所有计算结果仅供参考，实际工程设计请遵循相关规范并由专业工程师审核。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

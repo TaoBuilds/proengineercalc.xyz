@@ -39,19 +39,18 @@ export default function CoolingLoad() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/hvac">🌡️ 暖通空调</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/hvac">暖通空调</Link></div>
         <div className="calculator-container">
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '2rem 0 1rem' }}>冷负荷估算器</h1>
+          <h1 className="page-title">冷负荷估算器</h1>
           <div className="calculator-form">
-            <div className="form-group"><label>房间面积 (m²)</label><input type="number" min="1" value={area} onChange={(e) => setArea(e.target.value)} /></div>
-            <div className="form-group"><label>层高 (m)</label><input type="number" min="0.1" step="0.1" value={height} onChange={(e) => setHeight(e.target.value)} /></div>
-            <div className="form-group"><label>人员数量 (人)</label><input type="number" min="0" value={people} onChange={(e) => setPeople(e.target.value)} /></div>
-            <div className="form-group"><label>设备功率 (W)</label><input type="number" min="0" value={equipment} onChange={(e) => setEquipment(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="cooling-load-field-1">房间面积 (m²)</label><input id="cooling-load-field-1" type="number" min="1" value={area} onChange={(e) => setArea(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="cooling-load-field-2">层高 (m)</label><input id="cooling-load-field-2" type="number" min="0.1" step="0.1" value={height} onChange={(e) => setHeight(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="cooling-load-field-3">人员数量 (人)</label><input id="cooling-load-field-3" type="number" min="0" value={people} onChange={(e) => setPeople(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="cooling-load-field-4">设备功率 (W)</label><input id="cooling-load-field-4" type="number" min="0" value={equipment} onChange={(e) => setEquipment(e.target.value)} /></div>
             <div className="form-group">
-              <label>朝向系数</label>
-              <select value={orientation} onChange={(e) => setOrientation(e.target.value)}>
+              <label htmlFor="cooling-load-field-5">朝向系数</label>
+              <select id="cooling-load-field-5" value={orientation} onChange={(e) => setOrientation(e.target.value)}>
                 <option value="1.0">北向 (1.0)</option>
                 <option value="1.1">东向 / 西向 (1.1)</option>
                 <option value="1.2">南向 (1.2)</option>
@@ -59,7 +58,7 @@ export default function CoolingLoad() {
             </div>
             <button onClick={calculate} style={{ width: '100%', padding: '1rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px' }}>计算</button>
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 <div className="result-item"><span className="result-label">围护结构冷负荷 Q_envelope</span><span className="result-value">{result.Q_envelope} W</span></div>
                 <div className="result-item"><span className="result-label">人员冷负荷 Q_people</span><span className="result-value">{result.Q_people} W</span></div>
                 <div className="result-item"><span className="result-label">设备冷负荷 Q_equipment</span><span className="result-value">{result.Q_equipment} W</span></div>
@@ -132,7 +131,6 @@ export default function CoolingLoad() {
           <div className="disclaimer"><strong>免责声明：</strong>本计算结果仅供参考，不得直接用于正式工程设计。实际工程请委托具备资质的专业人员按相关规范进行计算。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

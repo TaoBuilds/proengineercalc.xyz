@@ -46,24 +46,23 @@ export default function MotorCurrent() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1><p className="tagline">专业工程师计算工具箱</p></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/hvac">🌡️ 暖通空调</Link><Link href="/calculators/electrical">⚡ 电气工程</Link><Link href="/calculators/fluid">💧 流体力学</Link><Link href="/calculators/structure">🏗️ 结构工程</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/electrical">电气工程</Link></div>
         <div className="calculator-container">
-          <h1 style={{fontSize:'1.75rem',fontWeight:700,margin:'2rem 0 1rem'}}>电机电流计算器</h1>
+          <h1 className="page-title">电机电流计算器</h1>
           <div className="calculator-form">
-            <div className="form-group"><label>电机功率 (kW)</label><input type="number" value={power} onChange={(e)=>setPower(e.target.value)}/></div>
-            <div className="form-group"><label>电源电压 (V)</label><input type="number" value={voltage} onChange={(e)=>setVoltage(e.target.value)}/></div>
-            <div className="form-group"><label>功率因数</label><input type="number" step="0.01" value={pf} onChange={(e)=>setPf(e.target.value)}/></div>
-            <div className="form-group"><label>电机效率 (%)</label><input type="number" value={efficiency} onChange={(e)=>setEfficiency(e.target.value)}/></div>
-            <div className="form-group"><label>启动方式</label>
-              <select value={startMethod} onChange={(e)=>setStartMethod(e.target.value)}>
+            <div className="form-group"><label htmlFor="motor-current-field-1">电机功率 (kW)</label><input id="motor-current-field-1" type="number" value={power} onChange={(e)=>setPower(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="motor-current-field-2">电源电压 (V)</label><input id="motor-current-field-2" type="number" value={voltage} onChange={(e)=>setVoltage(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="motor-current-field-3">功率因数</label><input id="motor-current-field-3" type="number" step="0.01" value={pf} onChange={(e)=>setPf(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="motor-current-field-4">电机效率 (%)</label><input id="motor-current-field-4" type="number" value={efficiency} onChange={(e)=>setEfficiency(e.target.value)}/></div>
+            <div className="form-group"><label htmlFor="motor-current-field-5">启动方式</label>
+              <select id="motor-current-field-5" value={startMethod} onChange={(e)=>setStartMethod(e.target.value)}>
                 {Object.entries(startLabels).map(([k,v])=><option key={k} value={k}>{v}</option>)}
               </select>
             </div>
             <button onClick={calculate} style={{width:'100%',padding:'1rem',background:'var(--primary)',color:'white',border:'none',borderRadius:'8px',fontSize:'1rem',fontWeight:600,cursor:'pointer'}}>计算</button>
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 <div className="result-item"><span className="result-label">额定电流</span><span className="result-value">{result.rated} A</span></div>
                 <div className="result-item"><span className="result-label">启动电流</span><span className="result-value">{result.start} A</span></div>
                 <div className="result-item"><span className="result-label">推荐断路器</span><span className="result-value">{result.breaker} A</span></div>
@@ -112,7 +111,6 @@ export default function MotorCurrent() {
           <div className="disclaimer"><strong>免责声明：</strong>所有计算结果仅供参考，实际工程设计请遵循相关规范并由专业工程师审核。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

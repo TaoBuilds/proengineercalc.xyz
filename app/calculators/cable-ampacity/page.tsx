@@ -25,44 +25,28 @@ export default function CableAmpacity() {
 
   return (
     <>
-      <header className="header">
-        <div className="container header-content">
-          <h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1>
-          <p className="tagline">专业工程师计算工具箱</p>
-        </div>
-      </header>
-
-      <nav className="nav">
-        <div className="container nav-inner">
-          <Link href="/">🏠 首页</Link>
-          <Link href="/calculators/hvac">🌡️ 暖通空调</Link>
-          <Link href="/calculators/electrical">⚡ 电气工程</Link>
-          <Link href="/calculators/fluid">💧 流体力学</Link>
-          <Link href="/calculators/structure">🏗️ 结构工程</Link>
-        </div>
-      </nav>
-
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/electrical">电气工程</Link></div>
         <div className="calculator-container">
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '2rem 0 1rem' }}>电缆载流量计算器</h1>
+          <h1 className="page-title">电缆载流量计算器</h1>
 
           <div className="calculator-form">
             <div className="form-group">
-              <label>导体材质</label>
-              <select value={conductorType} onChange={(e) => setConductorType(e.target.value as ConductorMaterial)}>
+              <label htmlFor="cable-ampacity-field-1">导体材质</label>
+              <select id="cable-ampacity-field-1" value={conductorType} onChange={(e) => setConductorType(e.target.value as ConductorMaterial)}>
                 <option value="copper">铜</option>
                 <option value="aluminum">铝</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label>导体截面积 (mm²)</label>
-              <input type="number" value={size} onChange={(e) => setSize(Number(e.target.value))} />
+              <label htmlFor="cable-ampacity-field-2">导体截面积 (mm²)</label>
+              <input id="cable-ampacity-field-2" type="number" value={size} onChange={(e) => setSize(Number(e.target.value))} />
             </div>
 
             <div className="form-group">
-              <label>敷设方式</label>
-              <select value={installMethod} onChange={(e) => setInstallMethod(e.target.value as InstallMethod)}>
+              <label htmlFor="cable-ampacity-field-3">敷设方式</label>
+              <select id="cable-ampacity-field-3" value={installMethod} onChange={(e) => setInstallMethod(e.target.value as InstallMethod)}>
                 {Object.entries(INSTALL_METHODS).map(([code, method]) => (
                   <option key={code} value={code}>{code} - {method.label}</option>
                 ))}
@@ -70,15 +54,15 @@ export default function CableAmpacity() {
             </div>
 
             <div className="form-group">
-              <label>环境温度 (°C)</label>
-              <input type="number" value={temp} onChange={(e) => setTemp(e.target.value)} />
+              <label htmlFor="cable-ampacity-field-4">环境温度 (°C)</label>
+              <input id="cable-ampacity-field-4" type="number" value={temp} onChange={(e) => setTemp(e.target.value)} />
             </div>
 
             <button onClick={calculate} style={{ width: '100%', padding: '1rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '1rem', fontWeight: 600, cursor: 'pointer' }}>计算</button>
 
             {error && <p role="alert" style={{color:'#b91c1c'}}>{error}</p>}
             {result !== null && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 <h4>计算结果</h4>
                 <div className="result-item">
                   <span className="result-label">估算载流量</span>
@@ -117,8 +101,6 @@ export default function CableAmpacity() {
           </div>
         </div>
       </main>
-
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

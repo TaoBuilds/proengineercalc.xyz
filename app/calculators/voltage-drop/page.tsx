@@ -52,36 +52,35 @@ export default function VoltageDrop() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/electrical">⚡ 电气工程</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/electrical">电气工程</Link></div>
         <div className="calculator-container">
-          <h1 style={{fontSize:'1.75rem',fontWeight:700,margin:'2rem 0 1rem'}}>电压降计算器</h1>
+          <h1 className="page-title">电压降计算器</h1>
           <div className="calculator-form">
-            <div className="form-group"><label>计算模式</label>
-              <select value={mode} onChange={(e)=>changeMode(e.target.value as Result['mode'])}>
+            <div className="form-group"><label htmlFor="voltage-drop-field-1">计算模式</label>
+              <select id="voltage-drop-field-1" value={mode} onChange={(e)=>changeMode(e.target.value as Result['mode'])}>
                 <option value="vd">计算电压降</option>
                 <option value="current">计算最大电流</option>
                 <option value="size">计算所需电缆截面积</option>
               </select>
             </div>
-            <div className="form-group"><label>系统电压 (V)</label><input type="number" value={voltage} onChange={(e)=>setVoltage(e.target.value)}/></div>
-            {mode !== 'current' && <div className="form-group"><label>电流 (A)</label><input type="number" value={current} onChange={(e)=>setCurrent(e.target.value)}/></div>}
-            <div className="form-group"><label>线路长度 (m) - 单程</label><input type="number" value={length} onChange={(e)=>setLength(e.target.value)}/></div>
-            {mode !== 'size' && <div className="form-group"><label>导体截面积 (mm²)</label>
-              <select value={size} onChange={(e)=>setSize(e.target.value)}>
+            <div className="form-group"><label htmlFor="voltage-drop-field-2">系统电压 (V)</label><input id="voltage-drop-field-2" type="number" value={voltage} onChange={(e)=>setVoltage(e.target.value)}/></div>
+            {mode !== 'current' && <div className="form-group"><label htmlFor="voltage-drop-field-3">电流 (A)</label><input id="voltage-drop-field-3" type="number" value={current} onChange={(e)=>setCurrent(e.target.value)}/></div>}
+            <div className="form-group"><label htmlFor="voltage-drop-field-4">线路长度 (m) - 单程</label><input id="voltage-drop-field-4" type="number" value={length} onChange={(e)=>setLength(e.target.value)}/></div>
+            {mode !== 'size' && <div className="form-group"><label htmlFor="voltage-drop-field-5">导体截面积 (mm²)</label>
+              <select id="voltage-drop-field-5" value={size} onChange={(e)=>setSize(e.target.value)}>
                 <option value="1.5">1.5 mm²</option><option value="2.5">2.5 mm²</option><option value="4">4 mm²</option><option value="6">6 mm²</option><option value="10">10 mm²</option><option value="16">16 mm²</option><option value="25">25 mm²</option>
               </select>
             </div>}
-            <div className="form-group"><label>材质</label>
-              <select value={material} onChange={(e)=>setMaterial(e.target.value as ConductorMaterial)}>
+            <div className="form-group"><label htmlFor="voltage-drop-field-6">材质</label>
+              <select id="voltage-drop-field-6" value={material} onChange={(e)=>setMaterial(e.target.value as ConductorMaterial)}>
                 <option value="copper">铜</option><option value="aluminum">铝</option>
               </select>
             </div>
             <button onClick={calculate} style={{width:'100%',padding:'1rem',background:'var(--primary)',color:'white',border:'none',borderRadius:'8px'}}>计算</button>
             {error && <p role="alert" style={{color:'#b91c1c'}}>{error}</p>}
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 {result.mode === 'vd' && (
                   <>
                     <div className="result-item"><span className="result-label">电压降</span><span className="result-value">{result.dropV.toFixed(2)} V ({result.dropPercent.toFixed(2)}%)</span></div>
@@ -128,7 +127,6 @@ export default function VoltageDrop() {
           <div className="disclaimer"><strong>免责声明：</strong>所有计算结果仅供参照。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }

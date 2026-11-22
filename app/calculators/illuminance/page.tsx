@@ -48,27 +48,26 @@ export default function Illuminance() {
 
   return (
     <>
-      <header className="header"><div className="container header-content"><h1 className="logo"><Link href="/">🔧 智效厂务工程计算器</Link></h1></div></header>
-      <nav className="nav"><div className="container nav-inner"><Link href="/">🏠 首页</Link><Link href="/calculators/electrical">⚡ 电气工程</Link></div></nav>
-      <main className="container">
+      <main id="main-content" className="container">
+        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/electrical">电气工程</Link></div>
         <div className="calculator-container">
-          <h1 style={{fontSize:'1.75rem',fontWeight:700,margin:'2rem 0 1rem'}}>照度计算器</h1>
+          <h1 className="page-title">照度计算器</h1>
           <div className="calculator-form">
-            <div className="form-group"><label>房间长度 (m)</label><input type="number" value={length} onChange={(e)=>setLength(e.target.value)} /></div>
-            <div className="form-group"><label>房间宽度 (m)</label><input type="number" value={width} onChange={(e)=>setWidth(e.target.value)} /></div>
-            <div className="form-group"><label>工作面高度 (m)</label><input type="number" value={workHeight} step="0.1" onChange={(e)=>setWorkHeight(e.target.value)} /></div>
-            <div className="form-group"><label>灯具安装高度 (m)</label><input type="number" value={mountHeight} step="0.1" onChange={(e)=>setMountHeight(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="illuminance-field-1">房间长度 (m)</label><input id="illuminance-field-1" type="number" value={length} onChange={(e)=>setLength(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="illuminance-field-2">房间宽度 (m)</label><input id="illuminance-field-2" type="number" value={width} onChange={(e)=>setWidth(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="illuminance-field-3">工作面高度 (m)</label><input id="illuminance-field-3" type="number" value={workHeight} step="0.1" onChange={(e)=>setWorkHeight(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="illuminance-field-4">灯具安装高度 (m)</label><input id="illuminance-field-4" type="number" value={mountHeight} step="0.1" onChange={(e)=>setMountHeight(e.target.value)} /></div>
             <div className="form-group">
-              <label>目标照度</label>
-              <select value={targetLux} onChange={(e)=>setTargetLux(e.target.value)}>
+              <label htmlFor="illuminance-field-5">目标照度</label>
+              <select id="illuminance-field-5" value={targetLux} onChange={(e)=>setTargetLux(e.target.value)}>
                 {luxOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
             </div>
-            <div className="form-group"><label>灯具光通量 (lm)</label><input type="number" value={flux} onChange={(e)=>setFlux(e.target.value)} /></div>
-            <div className="form-group"><label>维护系数 MF</label><input type="number" value={mf} step="0.05" min="0.5" max="1" onChange={(e)=>setMf(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="illuminance-field-6">灯具光通量 (lm)</label><input id="illuminance-field-6" type="number" value={flux} onChange={(e)=>setFlux(e.target.value)} /></div>
+            <div className="form-group"><label htmlFor="illuminance-field-7">维护系数 MF</label><input id="illuminance-field-7" type="number" value={mf} step="0.05" min="0.5" max="1" onChange={(e)=>setMf(e.target.value)} /></div>
             <button onClick={calculate} style={{width:'100%',padding:'1rem',background:'var(--primary)',color:'white',border:'none',borderRadius:'8px'}}>计算</button>
             {result && (
-              <div className="result-group">
+              <div className="result-group" role="status">
                 <div className="result-item"><span className="result-label">房间面积</span><span className="result-value">{result.area.toFixed(1)} m²</span></div>
                 <div className="result-item"><span className="result-label">室形指数 RI</span><span className="result-value">{result.RI.toFixed(2)}</span></div>
                 <div className="result-item"><span className="result-label">利用系数 CU</span><span className="result-value">{result.CU.toFixed(2)}</span></div>
@@ -120,7 +119,6 @@ export default function Illuminance() {
           <div className="disclaimer"><strong>免责声明：</strong>所有计算结果仅供参考，正式照明设计请使用专业软件并由持证工程师审核。</div>
         </div>
       </main>
-      <footer><div className="container"><p>© 2026 智效厂务工程计算器</p></div></footer>
     </>
   )
 }
