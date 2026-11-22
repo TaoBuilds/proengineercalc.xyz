@@ -29,7 +29,10 @@ export default function CalculatorWorkbench({slug, inputs, result, children, onC
           <h1>{tool.title}</h1>
           <p>{tool.desc}</p>
         </div>
-        <a href="#reference" className="tool-section-link">计算依据</a>
+        <div className="workbench-links">
+          <a href="#reference" className="tool-section-link">计算依据</a>
+          <Link href="/wechat#mini-program" className="tool-section-link">微信小程序</Link>
+        </div>
       </header>
 
       <div className="tool-workspace">

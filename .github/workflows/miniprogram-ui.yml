@@ -1,0 +1,47 @@
+name: Validate mini program web design
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/miniprogram-ui.yml'
+      - 'app/**'
+      - 'components/**'
+      - 'lib/miniprogram-catalog.ts'
+      - 'public/wechat-*'
+      - 'tests/miniprogram-ui.cjs'
+
+permissions:
+  contents: read
+
+jobs:
+  mini-program-ui:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Install Chromium and Chinese fonts
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+          if [ -z "$(fc-list :lang=zh)" ]; then
+            sudo apt-get install -y fonts-noto-cjk
+          fi
+      - name: Check the mobile catalog and WeChat entry
+        run: |
+          node node_modules/next/dist/bin/next start --hostname 127.0.0.1 &
+          app_pid=$!
+          trap 'kill $app_pid 2>/dev/null || true' EXIT
+          curl --retry 8 --retry-connrefused --retry-delay 1 -fsS http://127.0.0.1:3000/ -o /dev/null
+          node tests/miniprogram-ui.cjs
+      - name: Upload mobile screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-program-web-design
+          path: test-artifacts/wechat/
+          if-no-files-found: ignore

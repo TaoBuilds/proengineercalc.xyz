@@ -32,9 +32,9 @@ const calculators = {
 export type CalculatorCategory = keyof typeof calculators
 
 export const categories = [
-  { id: 'hvac', label: '暖通空调', code: 'HVAC', description: '湿空气、通风、冷负荷与水泵选型的初步计算。' },
-  { id: 'electrical', label: '电气工程', code: 'ELEC', description: '功率、电流、线缆和供电容量的初步估算。' },
-  { id: 'fluid', label: '流体力学', code: 'FLUID', description: '管道沿程压损、流动状态和流量单位换算。' },
+  { id: 'hvac', label: '暖通空调', code: 'HV', description: '湿空气、通风、冷负荷与水泵选型的初步计算。' },
+  { id: 'electrical', label: '电气工程', code: 'EL', description: '功率、电流、线缆和供电容量的初步估算。' },
+  { id: 'fluid', label: '流体与管道', code: 'FL', description: '管道沿程压损、流动状态和流量单位换算。' },
   { id: 'structure', label: '结构工程', code: 'STRUCT', description: '材料、梁荷载、钢材重量和工程单位换算。' },
 ] as const
 
