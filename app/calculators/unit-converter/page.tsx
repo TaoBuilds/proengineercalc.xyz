@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
+import CalculatorWorkbench from '../../../components/CalculatorWorkbench'
 
 const unitLabels: Record<string, Record<string, string>> = {
   length:      { m: 'm（米）', cm: 'cm（厘米）', mm: 'mm（毫米）', km: 'km（千米）', inch: 'in（英寸）', ft: 'ft（英尺）', yard: 'yd（码）' },
@@ -69,70 +69,69 @@ export default function UnitConverter() {
   const currentUnitKeys = Object.keys(unitLabels[category] ?? {})
 
   return (
-    <>
-      <main id="main-content" className="container">
-        <div className="calculator-breadcrumb"><Link href="/#calculator-directory">计算器</Link><span aria-hidden="true">/</span><Link href="/calculators/structure">结构工程</Link></div>
-        <div className="calculator-container">
-          <h1 className="page-title">单位换算器</h1>
-          <div className="calculator-form">
-            <div className="form-group"><label htmlFor="unit-converter-field-1">数值</label><input id="unit-converter-field-1" type="number" value={value} onChange={(e)=>setValue(e.target.value)} /></div>
-            <div className="form-group">
+    <CalculatorWorkbench
+      slug="unit-converter"
+      inputs={
+        <>
+          <div className="form-group"><label htmlFor="unit-converter-field-1">数值</label><input id="unit-converter-field-1" type="number" value={value} onChange={(e)=>setValue(e.target.value)} /></div>
+          <div className="form-group">
               <label htmlFor="unit-converter-field-2">类别</label>
               <select id="unit-converter-field-2" value={category} onChange={(e)=>handleCategoryChange(e.target.value)}>
                 {Object.entries(categoryLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
-            <div className="form-group">
+          <div className="form-group">
               <label htmlFor="unit-converter-field-3">源单位</label>
               <select id="unit-converter-field-3" value={from} onChange={(e)=>setFrom(e.target.value)}>
                 {currentUnitKeys.map(u => <option key={u} value={u}>{unitLabels[category][u]}</option>)}
               </select>
             </div>
-            <button onClick={calculate} style={{width:'100%',padding:'1rem',background:'var(--primary)',color:'white',border:'none',borderRadius:'8px'}}>换算</button>
-            {result && (
-              <div className="result-group" role="status">
-                {Object.entries(result).map(([k, v]) => (
-                  <div key={k} className="result-item">
-                    <span className="result-label">{k}</span>
-                    <span className="result-value">{v}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="content-section">
-            <h2>常用工程换算速查表</h2>
-            <table style={{width:'100%',borderCollapse:'collapse',fontSize:'0.9rem'}}>
-              <thead><tr style={{background:'var(--primary)',color:'white'}}><th style={{padding:'8px',textAlign:'left'}}>类别</th><th style={{padding:'8px',textAlign:'left'}}>换算关系</th></tr></thead>
-              <tbody>
-                <tr style={{borderBottom:'1px solid #eee'}}><td style={{padding:'8px'}}>长度</td><td style={{padding:'8px'}}>1 m = 100 cm = 1000 mm；1 ft = 0.3048 m；1 inch = 25.4 mm</td></tr>
-                <tr style={{borderBottom:'1px solid #eee'}}><td style={{padding:'8px'}}>质量</td><td style={{padding:'8px'}}>1 t = 1000 kg；1 kg = 2.205 lb；1 lb = 453.6 g</td></tr>
-                <tr style={{borderBottom:'1px solid #eee'}}><td style={{padding:'8px'}}>压力</td><td style={{padding:'8px'}}>1 bar = 100 kPa = 14.5 psi；1 atm = 101.325 kPa = 1.013 bar</td></tr>
-                <tr style={{borderBottom:'1px solid #eee'}}><td style={{padding:'8px'}}>温度</td><td style={{padding:'8px'}}>°F = °C × 9/5 + 32；K = °C + 273.15</td></tr>
-                <tr style={{borderBottom:'1px solid #eee'}}><td style={{padding:'8px'}}>能量</td><td style={{padding:'8px'}}>1 kWh = 3600 kJ = 3412 BTU = 860 kcal</td></tr>
-                <tr><td style={{padding:'8px'}}>功率</td><td style={{padding:'8px'}}>1 kW = 1000 W = 1.341 HP = 3412 BTU/h</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="content-section">
-            <h2>使用说明</h2>
-            <ol>
-              <li>输入需要换算的数值</li>
-              <li>选择换算类别（长度、质量、压力、温度、能量、功率）</li>
-              <li>选择源单位</li>
-              <li>点击换算，结果会同时显示该类别所有单位的对应值</li>
-            </ol>
-            <p>温度换算支持摄氏度（°C）、华氏度（°F）和开尔文（K）三种单位互转。</p>
-          </div>
-          <div className="content-section">
-            <h2>案例</h2>
-            <p><strong>压力换算：</strong>某设备工作压力为6 bar，换算为常用单位：6 bar = 600 kPa = 0.6 MPa = 87 psi = 5.92 atm。</p>
-            <p><strong>能量换算：</strong>某电机每天耗电50 kWh，换算为：50 kWh = 180,000 kJ = 170,600 BTU = 43,000 kcal。</p>
-            <p><strong>功率换算：</strong>一台75 kW电机，换算为：75 kW = 100.6 HP = 255,910 BTU/h。</p>
-          </div>
-          <div className="disclaimer"><strong>免责声明：</strong>所有计算结果仅供参考。</div>
+        </>
+      }
+      result={result && (
+        <div className="result-group">
+          {Object.entries(result).map(([k, v]) => (
+            <div key={k} className="result-item">
+              <span className="result-label">{k}</span>
+              <span className="result-value">{v}</span>
+            </div>
+          ))}
         </div>
-      </main>
-    </>
+      )}
+      onCalculate={calculate}
+      action="换算"
+    >
+      <div className="content-section">
+        <h2>常用工程换算速查表</h2>
+        <table style={{width:'100%',borderCollapse:'collapse',fontSize:'0.9rem'}}>
+          <thead><tr style={{background:'var(--primary)',color:'white'}}><th style={{padding:'8px',textAlign:'left'}}>类别</th><th style={{padding:'8px',textAlign:'left'}}>换算关系</th></tr></thead>
+          <tbody>
+            <tr style={{borderBottom:'1px solid #eee'}}><td style={{padding:'8px'}}>长度</td><td style={{padding:'8px'}}>1 m = 100 cm = 1000 mm；1 ft = 0.3048 m；1 inch = 25.4 mm</td></tr>
+            <tr style={{borderBottom:'1px solid #eee'}}><td style={{padding:'8px'}}>质量</td><td style={{padding:'8px'}}>1 t = 1000 kg；1 kg = 2.205 lb；1 lb = 453.6 g</td></tr>
+            <tr style={{borderBottom:'1px solid #eee'}}><td style={{padding:'8px'}}>压力</td><td style={{padding:'8px'}}>1 bar = 100 kPa = 14.5 psi；1 atm = 101.325 kPa = 1.013 bar</td></tr>
+            <tr style={{borderBottom:'1px solid #eee'}}><td style={{padding:'8px'}}>温度</td><td style={{padding:'8px'}}>°F = °C × 9/5 + 32；K = °C + 273.15</td></tr>
+            <tr style={{borderBottom:'1px solid #eee'}}><td style={{padding:'8px'}}>能量</td><td style={{padding:'8px'}}>1 kWh = 3600 kJ = 3412 BTU = 860 kcal</td></tr>
+            <tr><td style={{padding:'8px'}}>功率</td><td style={{padding:'8px'}}>1 kW = 1000 W = 1.341 HP = 3412 BTU/h</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div className="content-section">
+        <h2>使用说明</h2>
+        <ol>
+          <li>输入需要换算的数值</li>
+          <li>选择换算类别（长度、质量、压力、温度、能量、功率）</li>
+          <li>选择源单位</li>
+          <li>点击换算，结果会同时显示该类别所有单位的对应值</li>
+        </ol>
+        <p>温度换算支持摄氏度（°C）、华氏度（°F）和开尔文（K）三种单位互转。</p>
+      </div>
+      <div className="content-section">
+        <h2>案例</h2>
+        <p><strong>压力换算：</strong>某设备工作压力为6 bar，换算为常用单位：6 bar = 600 kPa = 0.6 MPa = 87 psi = 5.92 atm。</p>
+        <p><strong>能量换算：</strong>某电机每天耗电50 kWh，换算为：50 kWh = 180,000 kJ = 170,600 BTU = 43,000 kcal。</p>
+        <p><strong>功率换算：</strong>一台75 kW电机，换算为：75 kW = 100.6 HP = 255,910 BTU/h。</p>
+      </div>
+      <div className="disclaimer"><strong>免责声明：</strong>所有计算结果仅供参考。</div>
+    </CalculatorWorkbench>
   )
 }

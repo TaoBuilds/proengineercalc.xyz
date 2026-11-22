@@ -26,7 +26,8 @@ Next.js 14 App Router project. `app/layout.tsx` renders the shared site navigati
 - `'use client'` directive at top
 - Calculation functions live in the relevant page or a tested module in `lib/`
 - State via `useState`; results update either on button click or reactively via `useEffect` (both patterns exist)
-- Uses global CSS class names: `.calculator-container`, `.calculator-form`, `.result-group`, `.result-item`, `.content-section`, `.formula-box`, `.disclaimer`
+- Renders a shared `CalculatorWorkbench` with the calculator inputs, live result, and reference content.
+- Uses global CSS class names: `.calculator-form`, `.result-group`, `.result-item`, `.content-section`, `.formula-box`, `.disclaimer`
 
 **Shared component:** `components/CalculatorContent.tsx` exports `FormulaSection`, `TermsSection`, `GuideSection`, `FAQSection`, `CaseSection` for SEO content below the calculator form. Some pages use it; others inline the same content as HTML — both patterns coexist.
 
