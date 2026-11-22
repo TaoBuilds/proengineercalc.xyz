@@ -3,57 +3,28 @@
 import { useState } from 'react'
 import Link from 'next/link'
 
-const FLUIDS: Record<string, { nu: number; rho: number; label: string }> = {
-  water20: { nu: 1e-6,     rho: 998, label: '水 20°C' },
-  water60: { nu: 0.474e-6, rho: 983, label: '水 60°C' },
-  oil:     { nu: 50e-6,    rho: 870, label: '油'      },
-}
-
-function calcPipePressure(
-  flowM3h: number, diamMm: number, lengthM: number, fluidKey: string, roughnessMm: number
-) {
-  const Q = flowM3h / 3600
-  const d = diamMm / 1000
-  const L = lengthM
-  const eps = roughnessMm / 1000
-  const { nu, rho } = FLUIDS[fluidKey]
-  const A = Math.PI * (d / 2) ** 2
-  const v = Q / A
-  const Re = (v * d) / nu
-  let f: number
-  let regime: string
-  if (Re < 2300) {
-    f = 64 / Re
-    regime = '层流'
-  } else {
-    f = 0.25 / Math.log10(eps / (3.7 * d) + 5.74 / Re ** 0.9) ** 2
-    regime = Re < 4000 ? '过渡流' : '湍流'
-  }
-  const hf = f * (L / d) * v ** 2 / (2 * 9.81)
-  const dP = (rho * 9.81 * hf) / 1000
-  return { v, Re, f, hf, dP, regime }
-}
+import {calculatePipePressure, PIPE_FLUIDS} from '../../../lib/pipe-pressure'
+import type {PipeFluid} from '../../../lib/pipe-pressure'
 
 export default function PipePressure() {
   const [flow,      setFlow]      = useState('50')
   const [diameter,  setDiameter]  = useState('100')
   const [length,    setLength]    = useState('100')
-  const [fluid,     setFluid]     = useState('water20')
+  const [fluid,     setFluid]     = useState<PipeFluid>('water20')
   const [roughness, setRoughness] = useState('0.046')
-  const [result,    setResult]    = useState<ReturnType<typeof calcPipePressure> | null>(null)
+  const [result,    setResult]    = useState<ReturnType<typeof calculatePipePressure> | null>(null)
   const [error,     setError]     = useState('')
 
   const calculate = () => {
-    setError('')
-    const Q = parseFloat(flow)
-    const d = parseFloat(diameter)
-    const L = parseFloat(length)
-    const eps = parseFloat(roughness)
-    if ([Q, d, L, eps].some((n) => isNaN(n) || n <= 0)) {
-      setError('请输入有效的正数')
-      return
+    try {
+      setResult(calculatePipePressure(
+        parseFloat(flow), parseFloat(diameter), parseFloat(length), fluid, parseFloat(roughness),
+      ))
+      setError('')
+    } catch (err) {
+      setResult(null)
+      setError(err instanceof Error ? err.message : '输入参数无效')
     }
-    setResult(calcPipePressure(Q, d, L, fluid, eps))
   }
 
   return (
@@ -69,12 +40,12 @@ export default function PipePressure() {
             <div className="form-group"><label>管道长度 (m)</label><input type="number" min="0" step="any" value={length} onChange={(e) => setLength(e.target.value)} /></div>
             <div className="form-group">
               <label>流体</label>
-              <select value={fluid} onChange={(e) => setFluid(e.target.value)}>
-                {Object.entries(FLUIDS).map(([k, f]) => <option key={k} value={k}>{f.label}</option>)}
+              <select value={fluid} onChange={(e) => setFluid(e.target.value as PipeFluid)}>
+                {Object.entries(PIPE_FLUIDS).map(([k, f]) => <option key={k} value={k}>{f.label}</option>)}
               </select>
             </div>
             <div className="form-group"><label>管材粗糙度 (mm) — 钢管默认 0.046</label><input type="number" min="0" step="any" value={roughness} onChange={(e) => setRoughness(e.target.value)} /></div>
-            {error && <p style={{ color: 'red', margin: '0.5rem 0' }}>{error}</p>}
+            {error && <p role="alert" style={{ color: 'red', margin: '0.5rem 0' }}>{error}</p>}
             <button onClick={calculate} style={{ width: '100%', padding: '1rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px' }}>计算</button>
             {result && (
               <div className="result-group">
@@ -104,7 +75,7 @@ export default function PipePressure() {
             <ul>
               <li>输入管道实际内径（非公称直径）</li>
               <li>钢管粗糙度通常取 0.046 mm，铸铁管取 0.26 mm，塑料管取 0.0015 mm</li>
-              <li>Re &lt; 2300 为层流，Re &gt; 4000 为湍流，中间为过渡区</li>
+              <li>Re &lt; 2300 为层流，Re ≥ 4000 为湍流，过渡区沿用显式近似，结果对工况更敏感</li>
               <li>结果仅为沿程损失，局部损失需另行计算</li>
             </ul>
           </div>
@@ -118,9 +89,9 @@ export default function PipePressure() {
 
           <div className="content-section">
             <h2>计算案例</h2>
-            <p><strong>案例：</strong>DN100 钢管，长 50 m，输送 20°C 水，流量 30 m³/h，粗糙度 0.046 mm。</p>
+            <p><strong>案例：</strong>实际内径 100 mm 的钢管，长 50 m，输送 20°C 水，流量 30 m³/h，粗糙度 0.046 mm。</p>
             <p>v = 30/3600 / (π×0.05²) ≈ 1.06 m/s，Re ≈ 106000（湍流）</p>
-            <p>f ≈ 0.0198，hf ≈ 5.67 m，ΔP ≈ 55.5 kPa</p>
+            <p>f ≈ 0.02008，hf ≈ 0.576 m，ΔP ≈ 5.641 kPa</p>
           </div>
 
           <div className="disclaimer"><strong>免责声明：</strong>本计算器仅供工程参考，实际设计须由专业工程师复核。</div>
