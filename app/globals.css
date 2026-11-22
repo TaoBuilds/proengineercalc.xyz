@@ -244,3 +244,13 @@ main.container { padding-block: clamp(1.45rem, 3.5vw, 3.75rem); }
   .mini-featured-list > article { scroll-snap-align: start; }
   .wechat-entry { grid-template-columns: minmax(0, 1fr) minmax(5rem, 7rem); }
 }
+
+.calculator-wechat {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7rem;
+  align-items: center;
+  gap: .65rem;
+  margin-top: 1rem;
+  background: #f7fcfe;
+}
+.calculator-wechat p { margin-top: .25rem; color: var(--text-light); }
