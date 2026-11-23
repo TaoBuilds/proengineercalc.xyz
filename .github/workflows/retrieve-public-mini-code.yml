@@ -56,9 +56,13 @@ jobs:
           except OSError as error:
               raise SystemExit(f'The public article could not be read: {type(error).__name__}')
           title = re.search(r'<title[^>]*>(.*?)</title>', html, re.I | re.S)
+          markers = ['js_content', 'msg_title', '环境异常', '访问频繁', '验证', 'mmbiz.qpic.cn', 'mmbiz.qlogo.cn']
+          print('Article bytes and indicators:', len(html), [word for word in markers if word in html])
           print('Article title:', title.group(1).strip()[:110] if title else '(not present)')
           parser = PublicImages()
           parser.feed(html)
+          for value in re.findall(r'https://mmbiz\.(?:qpic|qlogo)\.cn/[^\s"\x27<>,]+', html):
+              parser.images.add(value.replace('&amp;', '&'))
           print('Public image candidates:', len(parser.images))
 
           def check(pair):
