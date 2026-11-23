@@ -1,0 +1,88 @@
+name: Retrieve public WeChat image
+
+on:
+  pull_request:
+    types: [synchronize]
+    paths:
+      - '.github/workflows/retrieve-public-mini-code.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  retrieve-public-image:
+    if: github.head_ref == 'feature/mini-program-code-placement'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Find square images in the public WeChat article
+        run: |
+          python3 -m venv "$RUNNER_TEMP/asset-reader"
+          "$RUNNER_TEMP/asset-reader/bin/pip" install --quiet Pillow
+          "$RUNNER_TEMP/asset-reader/bin/python" - <<'PY'
+          from concurrent.futures import ThreadPoolExecutor
+          from html.parser import HTMLParser
+          from io import BytesIO
+          from pathlib import Path
+          from urllib.parse import urlsplit
+          from urllib.request import Request, urlopen
+          import re
+          from PIL import Image
+
+          article = 'https://mp.weixin.qq.com/s/HPqi3bHPO4qIbVf9_BxG7Q'
+          out = Path('wechat-image-candidates')
+          out.mkdir()
+          def fetch(url):
+              request = Request(url, headers={'User-Agent': 'Mozilla/5.0', 'Referer': article})
+              with urlopen(request, timeout=10) as response:
+                  return response.read(6 * 1024 * 1024)
+
+          class PublicImages(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.images = set()
+              def handle_starttag(self, tag, pairs):
+                  if tag != 'img':
+                      return
+                  attrs = dict(pairs)
+                  for name in ('data-src', 'src'):
+                      value = attrs.get(name, '')
+                      parsed = urlsplit(value)
+                      if parsed.scheme == 'https' and parsed.hostname in ('mmbiz.qpic.cn', 'mmbiz.qlogo.cn'):
+                          self.images.add(value)
+
+          try:
+              html = fetch(article).decode('utf-8', errors='replace')
+          except OSError as error:
+              raise SystemExit(f'The public article could not be read: {type(error).__name__}')
+          title = re.search(r'<title[^>]*>(.*?)</title>', html, re.I | re.S)
+          print('Article title:', title.group(1).strip()[:110] if title else '(not present)')
+          parser = PublicImages()
+          parser.feed(html)
+          print('Public image candidates:', len(parser.images))
+
+          def check(pair):
+              index, url = pair
+              try:
+                  raw = fetch(url)
+                  image = Image.open(BytesIO(raw))
+                  w, h = image.size
+                  if min(w, h) >= 300 and .83 <= w/h <= 1.2 and image.format in ('PNG', 'JPEG', 'WEBP'):
+                      extension = {'PNG':'png','JPEG':'jpg','WEBP':'webp'}[image.format]
+                      (out / f'candidate-{index}.{extension}').write_bytes(raw)
+                      print(f'Candidate {index}: {w}x{h}, {image.format}')
+              except OSError:
+                  pass
+
+          with ThreadPoolExecutor(max_workers=4) as pool:
+              list(pool.map(check, enumerate(sorted(parser.images)[:24])))
+          if not list(out.iterdir()):
+              raise SystemExit('The public page did not expose a square image to inspect.')
+          PY
+      - name: Save candidate original images for visual comparison
+        uses: actions/upload-artifact@v4
+        with:
+          name: wechat-image-candidates
+          path: wechat-image-candidates/
+          if-no-files-found: error
+          retention-days: 1
