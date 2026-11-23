@@ -1,6 +1,7 @@
 import type {ReactNode} from 'react'
 import Link from 'next/link'
 import {calculatorCatalog} from '../lib/calculator-catalog'
+import CalculatorWechatCode from './CalculatorWechatCode'
 
 type Props = {
   slug: string
@@ -55,6 +56,8 @@ export default function CalculatorWorkbench({slug, inputs, result, children, onC
           </div>
         </section>
       </div>
+
+      <CalculatorWechatCode />
 
       <section id="reference" className="tool-reference" aria-labelledby="reference-title">
         <h2 id="reference-title">计算依据</h2>

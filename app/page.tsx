@@ -13,7 +13,7 @@ export default function Home() {
         <p className="mini-hero-label">工程快速校核</p>
         <h1>{miniProgramName}</h1>
         <p>把常用暖通、电气、流体、空压和节能计算放进一个顺手的工具箱。</p>
-        <Link href="/wechat#mini-program" className="mini-hero-link">在微信使用小程序</Link>
+        <Link href="#mini-program" className="mini-hero-link">在微信使用小程序</Link>
       </section>
       <MiniToolBrowser />
       <WechatEntries />
