@@ -1,7 +1,7 @@
 export const PIPE_FLUIDS = {
-  water20: {nu: 1e-6, rho: 998, label: '水 20°C'},
-  water60: {nu: 0.474e-6, rho: 983, label: '水 60°C'},
-  oil: {nu: 50e-6, rho: 870, label: '油'},
+  water20: {nu: 1e-6, rho: 998, label: '水 20°C', enLabel: 'Water at 20°C'},
+  water60: {nu: 0.474e-6, rho: 983, label: '水 60°C', enLabel: 'Water at 60°C'},
+  oil: {nu: 50e-6, rho: 870, label: '油', enLabel: 'Oil'},
 }
 
 export type PipeFluid = keyof typeof PIPE_FLUIDS
