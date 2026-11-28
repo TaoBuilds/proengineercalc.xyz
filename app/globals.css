@@ -244,3 +244,15 @@ main.container { padding-block: clamp(1.45rem, 3.5vw, 3.75rem); }
   .mini-featured-list > article { scroll-snap-align: start; }
   .wechat-entry { grid-template-columns: minmax(0, 1fr) minmax(5rem, 7rem); }
 }
+
+.site-header nav .language-switch {
+  border: 1px solid #5390a3;
+  border-radius: .45rem;
+  padding-inline: .55rem;
+  color: #e0f9fc;
+  line-height: 1.2;
+}
+@media (max-width: 23rem) {
+  .site-header-inner { flex-wrap: wrap; }
+  .site-header nav { width: 100%; justify-content: flex-start; }
+}

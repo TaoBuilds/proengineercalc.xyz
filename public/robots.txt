@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://proengineercalc.xyz/sitemap.xml
+Sitemap: https://www.proengineercalc.xyz/sitemap.xml

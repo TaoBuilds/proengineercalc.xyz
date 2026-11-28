@@ -15,10 +15,11 @@ Run `npm run test:engineering` on Node.js 22 for regression tests of the formula
 
 ## Architecture
 
-Next.js 14 App Router project. `app/layout.tsx` renders the shared site navigation and footer. The home and category pages read their tool listings from `lib/calculator-catalog.ts`.
+Next.js 14 App Router project. `app/[locale]/layout.tsx` renders the shared site navigation and footer. The home and category pages read their tool listings from `lib/calculator-catalog.ts`.
 
 **Routing:**
-- `/` — Searchable directory of all calculators (`app/page.tsx`)
+Chinese pages use the existing unprefixed URLs. English pages use `/en` and the same page components.
+- `/` — Searchable directory of all calculators (`app/[locale]/page.tsx`)
 - `/calculators/hvac|electrical|fluid|structure` — Category listing pages (server components)
 - `/calculators/[slug]` — Individual calculators, each a physically separate `page.tsx` (not a dynamic route)
 
@@ -35,6 +36,6 @@ Next.js 14 App Router project. `app/layout.tsx` renders the shared site navigati
 
 ## Adding a New Calculator
 
-1. Create `app/calculators/[new-slug]/page.tsx` — copy an existing calculator as a template
+1. Create `app/[locale]/calculators/[new-slug]/page.tsx` — copy an existing calculator as a template
 2. Register it in the appropriate category in `lib/calculator-catalog.ts`
-3. Add the URL to `public/sitemap.xml`
+3. Provide Chinese and English titles, descriptions, and tool copy. The sitemap uses the catalog to list both URLs.

@@ -10,12 +10,12 @@ export const CABLE_BASE_AMPS = {
 } satisfies Record<string, Record<number, number>>
 
 export const INSTALL_METHODS = {
-  A1: {label: '墙内导管', factor: 0.77},
-  A2: {label: '墙内导管', factor: 0.8},
-  B1: {label: '墙上导管', factor: 1},
-  B2: {label: '墙上导管', factor: 0.95},
-  C: {label: '空气中电缆', factor: 1.15},
-  D: {label: '直埋', factor: 1.08},
+  A1: {label: '墙内导管', enLabel: 'Conduit in a wall', factor: 0.77},
+  A2: {label: '墙内导管', enLabel: 'Conduit in a wall', factor: 0.8},
+  B1: {label: '墙上导管', enLabel: 'Conduit on a wall', factor: 1},
+  B2: {label: '墙上导管', enLabel: 'Conduit on a wall', factor: 0.95},
+  C: {label: '空气中电缆', enLabel: 'Cable in air', factor: 1.15},
+  D: {label: '直埋', enLabel: 'Direct burial', factor: 1.08},
 }
 
 export type ConductorMaterial = keyof typeof CABLE_BASE_AMPS

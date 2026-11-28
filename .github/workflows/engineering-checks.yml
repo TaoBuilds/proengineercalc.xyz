@@ -3,7 +3,7 @@ name: Engineering calculation checks
 on:
   pull_request:
     paths:
-      - 'app/calculators/**'
+      - 'app/**/calculators/**'
       - 'lib/**'
       - 'tests/**'
       - 'package*.json'
@@ -11,7 +11,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'app/calculators/**'
+      - 'app/**/calculators/**'
       - 'lib/**'
       - 'tests/**'
       - 'package*.json'
