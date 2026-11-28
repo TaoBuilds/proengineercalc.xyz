@@ -75,6 +75,7 @@ const categories = ['hvac', 'electrical', 'fluid', 'quick-reference', 'units', '
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1));
     await page.getByRole('button', {name: 'Favorites', exact: true}).click();
     assert.ok(await page.getByRole('link', {name: 'Dew Point Calculator — open web tool'}).isVisible());
+    await page.getByRole('button', {name: 'Favorites', exact: true}).click();
     await page.getByRole('searchbox', {name: 'Search tools'}).fill('voltage drop');
     assert.equal(await page.getByRole('link', {name: 'Voltage Drop — open web tool', exact: true}).getAttribute('href'),
       '/en/calculators/voltage-drop');
